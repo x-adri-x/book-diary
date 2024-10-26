@@ -3,7 +3,7 @@
 import React from 'react'
 import LoginForm from '@/app/ui/login-form'
 import Link from 'next/link'
-import { caveat } from '@/app/ui/fonts'
+import { caveat } from '@/app/fonts/fonts'
 
 export default function Page() {
   return (
