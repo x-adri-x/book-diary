@@ -12,5 +12,5 @@ export const book = pgTable('books', {
 })
 
 const bookSchema = createInsertSchema(book)
-export const insertBookSchema = bookSchema.omit({ userId: true })
+export const insertBookSchema = bookSchema.omit({ id: true })
 export const selectBookSchema = createSelectSchema(book)
