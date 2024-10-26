@@ -3,10 +3,11 @@
 import { selectBookSchema } from '@/database/schema/book'
 import { useState } from 'react'
 import { z } from 'zod'
-import { useRouter } from 'next/navigation'
-import EmptyBookList from './empty-book-list'
+import { usePathname } from 'next/navigation'
 import CreateBookForm from './create-book-form'
-import { caveat } from './fonts'
+import { caveat } from '../fonts/fonts'
+import EmptyList from '../components/empty-list'
+import Link from 'next/link'
 
 type Book = z.infer<typeof selectBookSchema>
 interface BookListProps {
@@ -14,27 +15,23 @@ interface BookListProps {
 }
 export default function BookList({ books }: BookListProps) {
   const [formOpen, setFormOpen] = useState(false)
-  const router = useRouter()
-
-  const handleClick = (id: number, title: string) => {
-    const slug = title.toLowerCase().trim().replace(' ', '-')
-    router.push(`/diaries/${id}/${slug}`)
-  }
+  const path = usePathname()
 
   return (
     <>
       {books.length === 0 ? (
-        <EmptyBookList />
+        <EmptyList name='book' />
       ) : (
         <ul className='grid grid-cols-2 grid-rows-auto w-full gap-x-2.5'>
           {books.map((book) => (
             <li
               key={book.id}
-              onClick={() => handleClick(book.id, book.title)}
               className={`py-10 border border-gray-200 shadow-lg rounded-lg mb-4 text-2xl ${caveat.className}`}
             >
-              <p>{book.author}</p>
-              <p>{book.title}</p>
+              <Link href={{ pathname: `${path}/${book.id}/${book.title.toLowerCase().trim().replace(' ', '-')}` }}>
+                <p>{book.author}</p>
+                <p>{book.title}</p>
+              </Link>
             </li>
           ))}
         </ul>
