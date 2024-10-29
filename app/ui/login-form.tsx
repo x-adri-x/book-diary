@@ -6,10 +6,11 @@ import { authenticate } from '@/app/lib/actions'
 import { useRouter } from 'next/navigation'
 import Input from '../components/input'
 import ErrorMessage from '../components/error-message'
+import FormButton from '../components/form-button'
 
 export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [isPending, setIsPending] = useState<boolean>(false)
+  const [loading, setIsLoading] = useState<boolean>(false)
   const router = useRouter()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -19,7 +20,7 @@ export default function LoginForm() {
     const formData = new FormData(event.currentTarget)
 
     try {
-      setIsPending(true)
+      setIsLoading(true)
       const error = await authenticate(undefined, formData)
 
       if (error) {
@@ -29,12 +30,12 @@ export default function LoginForm() {
     } catch (error) {
       setErrorMessage('Something went wrong.')
     } finally {
-      setIsPending(false)
+      setIsLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-3 mt-10'>
+    <form onSubmit={handleSubmit} className='space-y-3 mt-10 w-full'>
       <div className='flex-1'>
         <h1 className={`mb-3 text-xl text-center`}>Please log in to continue.</h1>
         <div className='w-full'>
@@ -45,9 +46,7 @@ export default function LoginForm() {
             <KeyIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
           </Input>
         </div>
-        <button className={`my-6 rounded-md text-slate-100 bg-slate-900 tracking-wider p-2 w-full shadow-md`}>
-          Log in
-        </button>
+        <FormButton loading={loading} label='Log in' />
         <ErrorMessage errorMessage={errorMessage} />
       </div>
     </form>

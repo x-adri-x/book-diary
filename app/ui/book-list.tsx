@@ -8,6 +8,7 @@ import CreateBookForm from './create-book-form'
 import { caveat } from '../fonts/fonts'
 import EmptyList from '../components/empty-list'
 import Link from 'next/link'
+import { addDash } from '../utility/utility'
 
 type Book = z.infer<typeof selectBookSchema>
 interface BookListProps {
@@ -28,7 +29,7 @@ export default function BookList({ books }: BookListProps) {
               key={book.id}
               className={`py-10 border border-gray-200 shadow-lg rounded-lg mb-4 text-2xl ${caveat.className}`}
             >
-              <Link href={{ pathname: `${path}/${book.id}/${book.title.toLowerCase().trim().replace(' ', '-')}` }}>
+              <Link href={{ pathname: `${path}/${book.id}/${addDash(book.title.toLowerCase().trim())}` }}>
                 <p>{book.author}</p>
                 <p>{book.title}</p>
               </Link>
