@@ -8,6 +8,7 @@ import CreateBookForm from './create-book-form'
 import { caveat } from '../fonts/fonts'
 import EmptyList from '../components/empty-list'
 import CreateItemForm from './create-item-form'
+import { addDash } from '../utility/utility'
 
 type Item = z.infer<typeof selectItemSchema>
 interface ItemListProps {
@@ -16,9 +17,9 @@ interface ItemListProps {
 export default function ItemsList({ items }: ItemListProps) {
   const [formOpen, setFormOpen] = useState(false)
   const router = useRouter()
-  console.log('items', items)
+
   const handleClick = (id: number, title: string) => {
-    const slug = title.toLowerCase().trim().replace(' ', '-')
+    const slug = addDash(title.toLowerCase().trim())
     router.push(`/diaries/${id}/${slug}`)
   }
 
@@ -32,12 +33,14 @@ export default function ItemsList({ items }: ItemListProps) {
             <li
               key={item.id}
               onClick={() => handleClick(item.id, item.name)}
-              className={`py-10 border border-gray-200 shadow-lg rounded-lg mb-4 text-2xl ${caveat.className}`}
-            ></li>
+              className={`py-10 text-center border border-gray-200 shadow-lg rounded-lg mb-4 text-2xl ${caveat.className}`}
+            >
+              {item.name}
+            </li>
           ))}
         </ul>
       )}
-      {formOpen && <CreateItemForm />}
+      {formOpen && <CreateItemForm setFormOpen={setFormOpen} />}
       {!formOpen && (
         <button
           className={`my-6 rounded-md text-slate-100 bg-slate-900 tracking-wider p-2 w-full shadow-md`}

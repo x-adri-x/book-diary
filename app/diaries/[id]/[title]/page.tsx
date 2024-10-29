@@ -4,19 +4,18 @@ import { category } from '@/database/schema/category'
 import { book } from '@/database/schema/book'
 import { book_category } from '@/database/schema/book-category'
 import CategoryList from '@/app/ui/category-list'
+import { removeDash } from '@/app/utility/utility'
+import { caveat } from '@/app/fonts/fonts'
 
 type PageProps = {
   params: { id: string; title: string }
 }
 
 export default async function Page({ params }: PageProps) {
-  const { id } = params
+  const { id, title } = params
   let categories
-  let title
 
   try {
-    const bookRecord = await db.select().from(book)
-    title = bookRecord[0].title
     categories = await db
       .select({ name: category.name, id: category.id })
       .from(category)
@@ -26,7 +25,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div>
-      <h1 className='text-2xl my-8 text-center'>{title}</h1>
+      <h1 className={`text-2xl my-8 text-center capitalize ${caveat.className}`}>{removeDash(title)}</h1>
       {categories && <CategoryList categories={categories} />}
     </div>
   )

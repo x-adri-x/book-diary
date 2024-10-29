@@ -7,6 +7,7 @@ import { useState } from 'react'
 import CreateCategoryForm from './create-category-form'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { addDash } from '../utility/utility'
 
 type Category = z.infer<typeof selectCategorySchema>
 interface CategoryListProps {
@@ -37,7 +38,7 @@ export default function CategoryList({ categories }: CategoryListProps) {
             key={category.id}
             className='block p-4 my-4 shadow-md w-full uppercase text-sm'
             href={{
-              pathname: `${path}/${category.name.toLowerCase().replace(' ', '-')}`,
+              pathname: `${path}/${addDash(category.name.toLowerCase())}`,
               query: { category: category.id },
             }}
           >

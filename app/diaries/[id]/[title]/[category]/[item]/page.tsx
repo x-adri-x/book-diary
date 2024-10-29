@@ -1,38 +1,36 @@
 import { caveat } from '@/app/fonts/fonts'
-import ItemsList from '@/app/ui/items-list'
 import { db } from '@/database'
-import { item } from '@/database/schema/item'
-import { sql } from 'drizzle-orm'
+import { field } from '@/database/schema/field'
+import { eq } from 'drizzle-orm'
 import { removeDash } from '@/app/utility/utility'
-import CategorySettings from '@/app/ui/category-setting'
+import Field from '@/app/ui/field'
 
-export default async function Category({
+export default async function Item({
   params,
   searchParams,
 }: {
-  params: { id: string; title: string; category: string }
+  params: { id: string; title: string; category: string; item: number }
   searchParams: { category: string }
 }) {
-  const { id, title } = params
+  const { title } = params
   const { category } = searchParams
-  let items
+  let fields
 
   try {
-    items = await db
+    fields = await db
       .select()
-      .from(item)
-      .where(sql`${item.bookId} = ${parseInt(id)} and ${item.categoryId} = ${category}`)
+      .from(field)
+      .where(eq(field.categoryId, parseInt(category)))
   } catch (error) {}
 
   return (
-    <div className='flex-1'>
+    <>
       <h1 className={`capitalize text-2xl my-8 text-center ${caveat.className}`}>{removeDash(title)}</h1>
       <div className='flex items-center'>
         <p className='font-slate-200 text-2xl w-full capitalize my-6'>{removeDash(params.category)}</p>
-        <CategorySettings />
       </div>
       <h2 className='my-8 text-xl uppercase'>Your {removeDash(params.category)} items</h2>
-      {items && <ItemsList items={items} />}
-    </div>
+      {fields && fields.map((field) => <Field field={field} />)}
+    </>
   )
 }
