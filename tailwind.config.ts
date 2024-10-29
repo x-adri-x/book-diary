@@ -21,6 +21,13 @@ const config: Config = {
         '100dvh': '100dvh',
         '50dvh': '50dvh',
       },
+      transitionProperty: {
+        'max-height': 'max-height',
+      },
+      maxHeight: {
+        '0': '0',
+        '30rem': '30rem', // Adjust this value as needed for the form content
+      },
     },
   },
   plugins: [
