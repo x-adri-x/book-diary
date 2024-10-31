@@ -2,7 +2,6 @@ import { eq } from 'drizzle-orm'
 import { db } from '@/database'
 import { book } from '@/database/schema/book'
 import BookList from '../ui/book-list'
-import { caveat } from '../fonts/fonts'
 import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/auth'
 
@@ -21,8 +20,8 @@ export default async function Page() {
 
   return (
     <>
-      <h1 className={`${caveat.className} text-5xl text-center my-8`}>Your Reading Projects</h1>
-      <div className='flex flex-col justify-center items-center text-center'>
+      <h1 className={`text-2xl text-center mb-6 mt-2 font-bold uppercase tracking-wider`}>Your Reading Projects</h1>
+      <div className='flex flex-col justify-center items-center '>
         <SessionProvider>{books && <BookList books={books} />}</SessionProvider>
       </div>
     </>

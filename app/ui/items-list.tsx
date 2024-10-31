@@ -3,12 +3,12 @@
 import { selectItemSchema } from '@/database/schema/item'
 import { useState } from 'react'
 import { z } from 'zod'
-import { useRouter } from 'next/navigation'
-import CreateBookForm from './create-book-form'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { caveat } from '../fonts/fonts'
 import EmptyList from '../components/empty-list'
 import CreateItemForm from './create-item-form'
 import { addDash } from '../utility/utility'
+import Link from 'next/link'
 
 type Item = z.infer<typeof selectItemSchema>
 interface ItemListProps {
@@ -16,27 +16,26 @@ interface ItemListProps {
 }
 export default function ItemsList({ items }: ItemListProps) {
   const [formOpen, setFormOpen] = useState(false)
-  const router = useRouter()
-
-  const handleClick = (id: number, title: string) => {
-    const slug = addDash(title.toLowerCase().trim())
-    router.push(`/diaries/${id}/${slug}`)
-  }
+  const path = usePathname()
+  const searchParams = useSearchParams()
 
   return (
     <>
       {items.length === 0 ? (
         <EmptyList name='item' />
       ) : (
-        <ul className='grid grid-cols-2 grid-rows-auto w-full gap-x-2.5'>
+        <ul className='grid grid-cols-3 grid-rows-auto w-full gap-x-2.5'>
           {items.map((item) => (
-            <li
+            <Link
               key={item.id}
-              onClick={() => handleClick(item.id, item.name)}
-              className={`py-10 text-center border border-gray-200 shadow-lg rounded-lg mb-4 text-2xl ${caveat.className}`}
+              href={{
+                pathname: `${path}/${addDash(item.name.toLowerCase().trim())}`,
+                query: { category: searchParams.get('category'), item: item.id },
+              }}
+              className={`py-6 flex justify-center items-center border border-gray-200 shadow-lg rounded-md mb-4 text-xl text-center ${caveat.className}`}
             >
               {item.name}
-            </li>
+            </Link>
           ))}
         </ul>
       )}

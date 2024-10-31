@@ -27,7 +27,9 @@ export default async function Settings({
   return (
     <>
       <div className='flex items-center'>
-        <p className='font-slate-200 text-2xl w-full capitalize my-6'>{removeDash(params.category)}</p>
+        <h1 className='font-slate-200 text-2xl w-full  mt-2 mb-4 uppercase tracking-wider font-bold text-center'>
+          Settings
+        </h1>
       </div>
       {fields && <FieldList fields={fields} />}
     </>

@@ -8,6 +8,7 @@ import CreateCategoryForm from './create-category-form'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { addDash } from '../utility/utility'
+import { caveat } from '../fonts/fonts'
 
 type Category = z.infer<typeof selectCategorySchema>
 interface CategoryListProps {
@@ -21,31 +22,20 @@ export default function CategoryList({ categories }: CategoryListProps) {
 
   return (
     <>
-      <details
-        className='p-4 border-x border-slate-300 text-base shadow-md bg-slate-100 uppercase tracking-wider'
-        onClick={() => setAccordionOpen(!accordionOpen)}
-      >
-        <summary className='pl-4 list-outside ml-4 list-none flex align-middle justify-between tracking-widest'>
-          Categories
-          {accordionOpen ? (
-            <ChevronDownIcon className='h-5 w-5 inline-block' />
-          ) : (
-            <ChevronRightIcon className='h-5 w-5 inline-block' />
-          )}
-        </summary>
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            className='block p-4 my-4 shadow-md w-full uppercase text-sm'
-            href={{
-              pathname: `${path}/${addDash(category.name.toLowerCase())}`,
-              query: { category: category.id },
-            }}
-          >
-            {category.name}
-          </Link>
-        ))}
-      </details>
+      <p className={`${caveat.className} text-start underline text-2xl`}>Categories:</p>
+      {categories.map((category) => (
+        <Link
+          key={category.id}
+          className='block p-4 my-4 shadow-md w-full uppercase text-sm'
+          href={{
+            pathname: `${path}/${addDash(category.name.toLowerCase())}`,
+            query: { category: category.id },
+          }}
+        >
+          {category.name}
+        </Link>
+      ))}
+
       {formOpen && <CreateCategoryForm setFormOpen={setFormOpen} />}
       {!formOpen && (
         <button

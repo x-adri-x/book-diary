@@ -1,36 +1,56 @@
 import { caveat } from '@/app/fonts/fonts'
 import { db } from '@/database'
 import { field } from '@/database/schema/field'
+import { content } from '@/database/schema/content'
 import { eq } from 'drizzle-orm'
 import { removeDash } from '@/app/utility/utility'
 import Field from '@/app/ui/field'
+import Breadcrumb from '@/app/components/breadcrumb'
 
 export default async function Item({
   params,
   searchParams,
 }: {
-  params: { id: string; title: string; category: string; item: number }
-  searchParams: { category: string }
+  params: { id: string; title: string; category: string; item: string }
+  searchParams: { category: string; item: string }
 }) {
-  const { title } = params
-  const { category } = searchParams
+  const { id, title } = params
+  const { category, item } = searchParams
   let fields
+  let contents
 
   try {
     fields = await db
       .select()
       .from(field)
       .where(eq(field.categoryId, parseInt(category)))
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
+
+  try {
+    contents = await db
+      .select({ text: content.text, fieldId: content.fieldId })
+      .from(content)
+      .where(eq(content.itemId, parseInt(item)))
+    console.log(contents)
+  } catch (error) {
+    console.log(error)
+  }
 
   return (
     <>
-      <h1 className={`capitalize text-2xl my-8 text-center ${caveat.className}`}>{removeDash(title)}</h1>
-      <div className='flex items-center'>
-        <p className='font-slate-200 text-2xl w-full capitalize my-6'>{removeDash(params.category)}</p>
-      </div>
-      <h2 className='my-8 text-xl uppercase'>Your {removeDash(params.category)} items</h2>
-      {fields && fields.map((field) => <Field field={field} />)}
+      <h1 className={`uppercase tracking-wider text-2xl mt-2 mb-4 text-center font-bold`}>{removeDash(params.item)}</h1>
+      <Breadcrumb
+        routes={[
+          { path: `/diaries/${id}/${title}`, label: 'Categories' },
+          {
+            path: `/diaries/${id}/${title}/${params.category}?category=${category}`,
+            label: `${removeDash(params.category)}`,
+          },
+        ]}
+      />
+      {fields && contents && fields.map((field) => <Field key={field.id} field={field} contents={contents} />)}
     </>
   )
 }
