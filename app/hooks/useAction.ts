@@ -22,6 +22,7 @@ export default function useAction(actionFunction: Function, onSuccess?: () => vo
 
     if (response && response.error) {
       setErrorMessage(response.error)
+      setLoading(false)
     }
 
     if (response && response.success) {

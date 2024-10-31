@@ -13,7 +13,7 @@ export default function Button({ label, loading = false, onClick }: ButtonProps)
       disabled={loading}
       onClick={onClick}
     >
-      {loading ? 'Creating...' : label}
+      {loading ? 'Loading...' : label}
     </button>
   )
 }

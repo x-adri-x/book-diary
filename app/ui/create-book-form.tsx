@@ -11,7 +11,7 @@ export default function CreateBookForm() {
   const { loading, errorMessage, handleSubmit, formRef } = useAction(createBook)
 
   return (
-    <Form onSubmit={handleSubmit} heading='Create a new diary.'>
+    <Form onSubmit={handleSubmit} ref={formRef} heading='Create a new diary.'>
       <div className='w-full'>
         <Input label='Author' placeholder="Author's name" />
         <Input label='Title' placeholder='Title of the book' />

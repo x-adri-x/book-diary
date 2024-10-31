@@ -11,7 +11,7 @@ export default function FormButton({ label, loading }: FormButtonProps) {
       }`}
       disabled={loading}
     >
-      {loading ? 'Creating...' : label}
+      {loading ? 'Loading...' : label}
     </button>
   )
 }

@@ -1,41 +1,17 @@
 'use client'
 
-import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline'
-import { useState } from 'react'
+import { AtSymbolIcon, KeyIcon } from '@heroicons/react/24/outline'
 import { authenticate } from '@/app/lib/actions'
-import { useRouter } from 'next/navigation'
 import Input from '../components/input'
 import ErrorMessage from '../components/error-message'
 import FormButton from '../components/form-button'
+import useAction from '../hooks/useAction'
 
 export default function LoginForm() {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [loading, setIsLoading] = useState<boolean>(false)
-  const router = useRouter()
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    setErrorMessage(null)
-    const formData = new FormData(event.currentTarget)
-
-    try {
-      setIsLoading(true)
-      const error = await authenticate(undefined, formData)
-
-      if (error) {
-        setErrorMessage(error)
-      }
-      router.push('/diaries')
-    } catch (error) {
-      setErrorMessage('Something went wrong.')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const { loading, errorMessage, handleSubmit, formRef } = useAction(authenticate)
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-3 mt-10 w-full'>
+    <form onSubmit={handleSubmit} ref={formRef} className='space-y-3 mt-10 w-full'>
       <div className='flex-1'>
         <h1 className={`mb-3 text-xl text-center`}>Please log in to continue.</h1>
         <div className='w-full'>

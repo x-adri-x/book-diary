@@ -1,44 +1,19 @@
 'use client'
 
 import { AtSymbolIcon, KeyIcon } from '@heroicons/react/24/outline'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { signup } from '../lib/actions'
 import Input from '../components/input'
 import ErrorMessage from '../components/error-message'
 import Form from '../components/form'
 import FormButton from '../components/form-button'
+import useAction from '../hooks/useAction'
+import Link from 'next/link'
 
 export default function SignUpForm() {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [loading, setIsLoading] = useState<boolean>(false)
-  const router = useRouter()
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setErrorMessage(null)
-
-    const formData = new FormData(event.currentTarget)
-    console.log('signup form', formData)
-
-    try {
-      setIsLoading(true) // Set loading state
-      const error = await signup(undefined, formData)
-      if (error) {
-        setErrorMessage(error)
-      } else {
-        console.log('Signup successful')
-        router.push('/diaries')
-      }
-    } catch (error) {
-      setErrorMessage('Something went wrong.')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const { loading, errorMessage, handleSubmit, formRef } = useAction(signup)
 
   return (
-    <Form onSubmit={handleSubmit} heading='Create an account'>
+    <Form onSubmit={handleSubmit} ref={formRef} heading='Create an account'>
       <div className='w-full'>
         <Input label='Email' placeholder='Enter your email address' type='email'>
           <AtSymbolIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
@@ -47,15 +22,15 @@ export default function SignUpForm() {
           <KeyIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
         </Input>
         <div className='mt-4'>
-          <label className='mb-3 mt-5 block text-xs font-medium text-gray-900' htmlFor='password'>
+          <label className='mb-3 mt-5 block text-xs font-medium text-gray-900' htmlFor='confirm-password'>
             Confirm password
           </label>
           <div className='relative'>
             <input
               className='peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500'
-              id='password'
+              id='confirm-password'
               type='password'
-              name='password'
+              name='confirm-password'
               placeholder='Re-enter password'
               required
               minLength={6}
@@ -65,7 +40,14 @@ export default function SignUpForm() {
         </div>
       </div>
       <FormButton loading={loading} label='Create account' />
-      <ErrorMessage errorMessage={errorMessage} />
+      <div className='flex items-center'>
+        <ErrorMessage errorMessage={errorMessage} />
+        {errorMessage && errorMessage === 'Email is already registered.' && (
+          <Link href='/' className={` text-slate-900 tracking-wide underline underline-offset-2 ml-2`}>
+            Go to login
+          </Link>
+        )}
+      </div>
     </Form>
   )
 }

@@ -6,11 +6,11 @@ type ErrorMessageProps = {
 
 export default function ErrorMessage({ errorMessage }: ErrorMessageProps) {
   return (
-    <div className='flex h-6 items-end space-x-1' aria-live='polite' aria-atomic='true'>
+    <div className='flex items-center space-x-1' aria-live='polite' aria-atomic='true'>
       {errorMessage && (
         <>
-          <ExclamationCircleIcon className='h-5 w-5 text-red-500' />
-          <p className='text-sm text-red-500'>{errorMessage}</p>
+          <ExclamationCircleIcon className='h-8 w-8 text-red-500' />
+          <p className='text-sm text-red-600'>{errorMessage}</p>
         </>
       )}
     </div>

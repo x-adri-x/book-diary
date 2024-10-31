@@ -175,7 +175,7 @@ export async function editContent(
   }
 }
 
-export async function authenticate(prevState: string | undefined, formData: FormData) {
+export async function authenticate(formData: FormData) {
   try {
     await signIn('credentials', {
       redirect: false,
@@ -196,25 +196,37 @@ export async function authenticate(prevState: string | undefined, formData: Form
   }
 }
 
-export async function signup(prevState: string | undefined, formData: FormData) {
-  try {
-    const saltRounds = 10
-    bcrypt.genSalt(saltRounds, (error, salt) => {
-      if (error) return
-      const password = formData.get('password') as string
-      bcrypt.hash(password, salt, async (error, hash) => {
-        if (error) return
+export async function signup(formData: FormData) {
+  const password = formData.get('password') as string
+  const confirmPassword = formData.get('confirm-password')!
+  const email = formData.get('email') as string
 
-        // Hashing successful, 'hash' contains the hashed password
-        console.log('Hashed password:', hash)
-        const id = await db
-          .insert(user)
-          .values({ password: hash, email: formData.get('email') as string })
-          .returning({ insertedId: user.id })
-        console.log('id', id)
-      })
-    })
+  if (password !== confirmPassword) {
+    return { error: 'The passwords entered do not match. Please try again.' }
+  }
+
+  try {
+    const existingUser = await db.select().from(user).where(eq(user.email, email))
+    if (existingUser.length !== 0) {
+      return { error: 'Email is already registered.' }
+    }
+
+    const saltRounds = 10
+    const salt = await bcrypt.genSalt(saltRounds)
+    const hashedPassword = await bcrypt.hash(password, salt)
+
+    const insertedId = await db
+      .insert(user)
+      .values({ password: hashedPassword, email: email })
+      .onConflictDoNothing()
+      .returning({ insertedId: user.id })
+
+    if (!insertedId) {
+      return { error: 'Failed to register. Please try again later.' }
+    }
+    redirect('/diaries')
   } catch (error) {
-    return 'Password encryption failed.'
+    console.error(error)
+    return { error: 'Password encryption failed.' }
   }
 }
