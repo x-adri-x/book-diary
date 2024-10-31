@@ -6,11 +6,12 @@ import { user } from '@/database/schema/user'
 import { category, insertCategorySchema } from '@/database/schema/category'
 import { item } from '@/database/schema/item'
 import { field } from '@/database/schema/field'
+import { content } from '@/database/schema/content'
 import { book_category } from '@/database/schema/book-category'
 import { signIn } from '@/auth'
 import { AuthError } from 'next-auth'
 import bcrypt from 'bcrypt'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import { auth } from '@/auth'
 import { ReadonlyURLSearchParams, redirect } from 'next/navigation'
@@ -20,7 +21,7 @@ interface Params {
   [key: string]: string | string[]
 }
 
-export async function createBook(formData: FormData, searchParams?: ReadonlyURLSearchParams, params?: Params) {
+export async function createBook(formData: FormData, searchParams: ReadonlyURLSearchParams, params: Params) {
   const session = await auth()
   let bookId
   let title
@@ -69,43 +70,49 @@ export async function createBook(formData: FormData, searchParams?: ReadonlyURLS
   return null
 }
 
-export async function createCategory(formData: FormData, searchParams?: ReadonlyURLSearchParams, params?: Params) {
+export async function createCategory(formData: FormData, searchParams: ReadonlyURLSearchParams, params: Params) {
   const data = insertCategorySchema.parse({
     name: formData.get('name'),
   })
-  const bookId = params?.id as string
+  const bookId = params.id as string
   try {
     const insertedIds = await db.insert(category).values({ name: data.name }).returning({ insertedId: category.id })
 
     await db.insert(book_category).values({ bookId: parseInt(bookId), categoryId: insertedIds[0].insertedId })
-    revalidatePath(`/diaries/${bookId}/${params?.title as string}`)
+    revalidatePath(`/diaries/${bookId}/${params.title as string}`)
     return { success: `Category was successfully created.` }
   } catch (error) {
     return { error: 'An error occurred while creating the category.' }
   }
 }
 
-export async function createItem(formData: FormData, searchParams?: ReadonlyURLSearchParams, params?: Params) {
+export async function createItem(
+  formData: FormData,
+  searchParams: { category: string },
+  params: { id: string; title: string; category: string }
+) {
+  const { id, title, category } = params!
   try {
     await db
       .insert(item)
       .values({
         name: formData.get('name') as string,
-        categoryId: parseInt(searchParams?.get('category')!),
-        bookId: parseInt(params?.bookId as string),
+        categoryId: parseInt(searchParams.category),
+        bookId: parseInt(id),
       })
       .returning({ insertedId: item.id })
+    revalidatePath(`/diaries/${id}/${title}/${category}?category=${searchParams.category}`)
     return { success: `Item was successfully created.` }
   } catch (error) {
     return { error: 'An error occurred while creating this item.' }
   }
 }
 
-export async function createField(formData: FormData, searchParams?: ReadonlyURLSearchParams, params?: Params) {
+export async function createField(formData: FormData, searchParams: { category: string }, params: Params) {
   try {
     await db
       .insert(field)
-      .values({ name: formData.get('name') as string, categoryId: parseInt(searchParams?.get('category')!) })
+      .values({ name: formData.get('name') as string, categoryId: parseInt(searchParams.category) })
       .returning({ insertedId: field.id })
     return { success: `Field was successfully created.` }
   } catch (error) {
@@ -123,6 +130,48 @@ export async function editField(formData: FormData, fieldId: number, path: strin
     return { success: `Field was successfully updated.` }
   } catch (error) {
     return { error: 'An error occurred while updating field.' }
+  }
+}
+
+export async function deleteField(fieldId: number, path: string) {
+  try {
+    await db.delete(field).where(eq(field.id, fieldId))
+    revalidatePath(path)
+    return { success: `Field was successfully deleted.` }
+  } catch (error) {
+    return { error: 'An error occurred while updating field.' }
+  }
+}
+
+export async function editContent(
+  text: string,
+  fieldId: number,
+  categoryId: number,
+  itemId: number,
+  params: Params,
+  path: string
+) {
+  try {
+    const record = await db
+      .select({ text: content.text })
+      .from(content)
+      .where(sql`${content.fieldId} = ${fieldId} and ${content.itemId} = ${itemId}`)
+
+    if (record.length === 0) {
+      await db.insert(content).values({ text: text, fieldId: fieldId, itemId: itemId })
+      revalidatePath(`${path.replace(`/${params.item}`, `?category=${categoryId}&item=${itemId}`)}`)
+      return { success: `Content was successfully created.` }
+    } else {
+      await db
+        .update(content)
+        .set({ text: text })
+        .where(sql`${content.fieldId} = ${fieldId} and ${content.itemId} = ${itemId}`)
+    }
+    revalidatePath(`${path.replace(`/${params.item}`, `?category=${categoryId}&item=${itemId}`)}`)
+    return { success: 'Updating of content was successful.' }
+  } catch (error) {
+    console.log(error)
+    return { error: 'An error occurred while creating content.' }
   }
 }
 

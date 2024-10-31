@@ -1,5 +1,6 @@
-import { revalidatePath } from 'next/cache'
-import { useParams, usePathname, useSearchParams } from 'next/navigation'
+'use client'
+
+import { useParams, useSearchParams } from 'next/navigation'
 import { useState, useRef } from 'react'
 
 export default function useAction(actionFunction: Function, onSuccess?: () => void) {
@@ -9,13 +10,15 @@ export default function useAction(actionFunction: Function, onSuccess?: () => vo
   const searchParams = useSearchParams()
   const params = useParams()
 
+  const searchParamsObject = Object.fromEntries(searchParams.entries())
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setErrorMessage(null)
     setLoading(true)
 
     const formData = new FormData(event.currentTarget)
-    const response = await actionFunction(formData, searchParams, params)
+    const response = await actionFunction(formData, { ...searchParamsObject }, params)
 
     if (response && response.error) {
       setErrorMessage(response.error)
