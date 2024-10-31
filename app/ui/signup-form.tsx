@@ -19,6 +19,7 @@ export default function SignUpForm() {
     setErrorMessage(null)
 
     const formData = new FormData(event.currentTarget)
+    console.log('signup form', formData)
 
     try {
       setIsLoading(true) // Set loading state
@@ -39,10 +40,10 @@ export default function SignUpForm() {
   return (
     <Form onSubmit={handleSubmit} heading='Create an account'>
       <div className='w-full'>
-        <Input label='Email' placeholder='Enter your email address'>
+        <Input label='Email' placeholder='Enter your email address' type='email'>
           <AtSymbolIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
         </Input>
-        <Input label='Password' placeholder='Enter password'>
+        <Input label='Password' placeholder='Enter password' type='password'>
           <KeyIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
         </Input>
         <div className='mt-4'>

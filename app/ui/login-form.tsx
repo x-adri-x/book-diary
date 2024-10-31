@@ -39,10 +39,11 @@ export default function LoginForm() {
       <div className='flex-1'>
         <h1 className={`mb-3 text-xl text-center`}>Please log in to continue.</h1>
         <div className='w-full'>
-          <Input label='Email' placeholder='Enter your email address'>
+          <Input label='Email' placeholder='Enter your email address' type='email'>
             <AtSymbolIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
           </Input>
-          <Input label='Password' placeholder='Enter password'>
+
+          <Input label='Password' placeholder='Enter password' type='password'>
             <KeyIcon className='pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
           </Input>
         </div>
