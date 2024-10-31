@@ -4,6 +4,7 @@ import { book } from '@/database/schema/book'
 import BookList from '../ui/book-list'
 import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/auth'
+import Title from '../components/title'
 
 export default async function Page() {
   const session = await auth()
@@ -20,7 +21,7 @@ export default async function Page() {
 
   return (
     <>
-      <h1 className={`text-2xl text-center mb-6 mt-2 font-bold uppercase tracking-wider`}>Your Reading Projects</h1>
+      <Title text='Your Reading Projects' />
       <div className='flex flex-col justify-center items-center '>
         <SessionProvider>{books && <BookList books={books} />}</SessionProvider>
       </div>

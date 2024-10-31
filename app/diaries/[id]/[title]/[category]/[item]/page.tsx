@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm'
 import { removeDash } from '@/app/utility/utility'
 import Field from '@/app/ui/field'
 import Breadcrumb from '@/app/components/breadcrumb'
+import Title from '@/app/components/title'
 
 export default async function Item({
   params,
@@ -40,7 +41,7 @@ export default async function Item({
 
   return (
     <>
-      <h1 className={`uppercase tracking-wider text-2xl mt-2 mb-4 text-center font-bold`}>{removeDash(params.item)}</h1>
+      <Title text={removeDash(params.item)} />
       <Breadcrumb
         routes={[
           { path: `/diaries/${id}/${title}`, label: 'Categories' },

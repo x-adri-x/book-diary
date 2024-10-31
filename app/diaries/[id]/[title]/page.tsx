@@ -5,6 +5,7 @@ import { book_category } from '@/database/schema/book-category'
 import CategoryList from '@/app/ui/category-list'
 import { removeDash } from '@/app/utility/utility'
 import Breadcrumb from '@/app/components/breadcrumb'
+import Title from '@/app/components/title'
 
 type PageProps = {
   params: { id: string; title: string }
@@ -24,7 +25,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div>
-      <h1 className={`text-2xl mb-6 mt-2 text-center font-bold uppercase tracking-wider`}>{removeDash(title)}</h1>
+      <Title text={removeDash(title)} />
       <Breadcrumb routes={[]} />
       {categories && <CategoryList categories={categories} />}
     </div>

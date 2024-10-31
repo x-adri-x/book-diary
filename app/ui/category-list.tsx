@@ -2,7 +2,6 @@
 
 import { z } from 'zod'
 import { selectCategorySchema } from '@/database/schema/category'
-import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 import CreateCategoryForm from './create-category-form'
 import { usePathname } from 'next/navigation'
@@ -17,7 +16,6 @@ interface CategoryListProps {
 
 export default function CategoryList({ categories }: CategoryListProps) {
   const [formOpen, setFormOpen] = useState(false)
-  const [accordionOpen, setAccordionOpen] = useState(false)
   const path = usePathname()
 
   return (

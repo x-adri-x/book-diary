@@ -10,16 +10,17 @@ import { caveat } from '../fonts/fonts'
 import Button from '../components/button'
 import { editContent } from '../lib/actions'
 import { usePathname, useSearchParams, useParams } from 'next/navigation'
+import ErrorMessage from '../components/error-message'
 
 type Field = z.infer<typeof fieldSchema>
 type Content = z.infer<typeof selectContentSchema>
 type FieldProps = {
   field: Field
   contents: Array<Content>
-  children?: React.ReactNode
 }
 
-export default function Field({ field, contents, children }: FieldProps) {
+export default function Field({ field, contents }: FieldProps) {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [accordionOpen, setAccordionOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -40,13 +41,13 @@ export default function Field({ field, contents, children }: FieldProps) {
   }
 
   const handleEdit = async () => {
-    // setErrorMessage(null)
+    setErrorMessage(null)
     setLoading(true)
 
     const response = await editContent(editedContent, field.id!, categoryId, itemId, params, path)
-    // if (response && response.error) {
-    //   setErrorMessage(response.error)
-    // }
+    if (response && response.error) {
+      setErrorMessage(response.error)
+    }
     if (response && response.success) {
       setLoading(false)
       setIsEditing(false)
@@ -59,40 +60,43 @@ export default function Field({ field, contents, children }: FieldProps) {
   }
 
   return (
-    <details className={`p-4 text-2xl`} onClick={() => setAccordionOpen(!accordionOpen)}>
-      <summary
-        className={`list-outside list-none flex items-center justify-between w-full underline underline-offset-8 ${caveat.className}`}
-      >
-        {field.name}
-        {!accordionOpen ? (
-          <ChevronDownIcon className='h-5 w-5 inline-block' />
-        ) : (
-          <ChevronRightIcon className='h-5 w-5 inline-block' />
-        )}
-      </summary>
-      <div className='mt-6 text-base'>
-        {!isEditing ? (
-          <>
-            <p>{editedContent === '' ? 'Start adding notes...' : editedContent}</p>
-            <Button label='Edit' loading={loading} onClick={() => setIsEditing(true)} />
-          </>
-        ) : (
-          <>
-            <textarea
-              placeholder={content === '' ? 'Add some notes here' : ''}
-              rows={6}
-              className='p-2 border border-slate-300 rounded w-full'
-              onClick={() => setIsEditing(true)}
-              onChange={handleContentChange}
-              value={editedContent}
-            />
-            <div className='flex gap-2'>
-              <Button label='Save' loading={loading} onClick={handleEdit} />
-              <Button label='Cancel' onClick={handleCancel} />
-            </div>
-          </>
-        )}
-      </div>
-    </details>
+    <>
+      <details className={`p-4 text-2xl`} onClick={() => setAccordionOpen(!accordionOpen)}>
+        <summary
+          className={`list-outside list-none flex items-center justify-between w-full underline underline-offset-8 ${caveat.className}`}
+        >
+          {field.name}
+          {!accordionOpen ? (
+            <ChevronDownIcon className='h-5 w-5 inline-block' />
+          ) : (
+            <ChevronRightIcon className='h-5 w-5 inline-block' />
+          )}
+        </summary>
+        <div className='mt-6 text-base'>
+          {!isEditing ? (
+            <>
+              <p>{editedContent === '' ? 'Start adding notes...' : editedContent}</p>
+              <Button label='Edit' loading={loading} onClick={() => setIsEditing(true)} />
+            </>
+          ) : (
+            <>
+              <textarea
+                placeholder={content === '' ? 'Add some notes here' : ''}
+                rows={6}
+                className='p-2 border border-slate-300 rounded w-full'
+                onClick={() => setIsEditing(true)}
+                onChange={handleContentChange}
+                value={editedContent}
+              />
+              <div className='flex gap-2'>
+                <Button label='Save' loading={loading} onClick={handleEdit} />
+                <Button label='Cancel' onClick={handleCancel} />
+              </div>
+            </>
+          )}
+        </div>
+      </details>
+      <ErrorMessage errorMessage={errorMessage} />
+    </>
   )
 }

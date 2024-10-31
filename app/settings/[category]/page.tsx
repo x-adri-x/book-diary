@@ -1,9 +1,8 @@
-import { caveat } from '@/app/fonts/fonts'
 import { db } from '@/database'
 import { field } from '@/database/schema/field'
 import { eq } from 'drizzle-orm'
-import { removeDash } from '@/app/utility/utility'
 import FieldList from '@/app/ui/field-list'
+import Title from '@/app/components/title'
 
 export default async function Settings({
   params,
@@ -27,9 +26,7 @@ export default async function Settings({
   return (
     <>
       <div className='flex items-center'>
-        <h1 className='font-slate-200 text-2xl w-full  mt-2 mb-4 uppercase tracking-wider font-bold text-center'>
-          Settings
-        </h1>
+        <Title text='Settings' />
       </div>
       {fields && <FieldList fields={fields} />}
     </>
