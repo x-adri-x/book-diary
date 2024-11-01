@@ -11,7 +11,7 @@ export default function LoginForm() {
   const { loading, errorMessage, handleSubmit, formRef } = useAction(authenticate)
 
   return (
-    <form onSubmit={handleSubmit} ref={formRef} className='space-y-3 mt-10 w-full'>
+    <form onSubmit={handleSubmit} ref={formRef} className='space-y-3 mt-10 w-full lg:w-1/2'>
       <div className='flex-1'>
         <h1 className={`mb-3 text-xl text-center`}>Please log in to continue.</h1>
         <div className='w-full'>

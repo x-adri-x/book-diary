@@ -4,8 +4,8 @@ import { createBook } from '../lib/actions'
 import ErrorMessage from '../components/error-message'
 import Input from '../components/input'
 import Form from '../components/form'
-import FormButton from '../components/form-button'
-import useAction from '../hooks/useAction'
+import FormButton from '@/app/components/form-button'
+import useAction from '@/app/hooks/useAction'
 
 export default function CreateBookForm() {
   const { loading, errorMessage, handleSubmit, formRef } = useAction(createBook)

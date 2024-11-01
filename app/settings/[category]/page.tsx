@@ -24,11 +24,11 @@ export default async function Settings({
   }
 
   return (
-    <>
+    <div className='lg:flex lg:flex-col'>
       <div className='flex items-center'>
         <Title text='Settings' />
       </div>
       {fields && <FieldList fields={fields} />}
-    </>
+    </div>
   )
 }

@@ -20,11 +20,11 @@ export default async function Page() {
   }
 
   return (
-    <>
+    <div>
       <Title text='Your Reading Projects' />
       <div className='flex flex-col justify-center items-center '>
         <SessionProvider>{books && <BookList books={books} />}</SessionProvider>
       </div>
-    </>
+    </div>
   )
 }

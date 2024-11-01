@@ -40,7 +40,7 @@ export default async function Item({
   }
 
   return (
-    <>
+    <div className='lg:flex lg:flex-col lg:w-3/5 lg:min-h-96 lg:max-w-screen-sm lg:p-8 lg:shadow-lg'>
       <Title text={removeDash(params.item)} />
       <Breadcrumb
         routes={[
@@ -52,6 +52,6 @@ export default async function Item({
         ]}
       />
       {fields && contents && fields.map((field) => <Field key={field.id} field={field} contents={contents} />)}
-    </>
+    </div>
   )
 }

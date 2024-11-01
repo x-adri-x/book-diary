@@ -29,7 +29,7 @@ export default async function Category({
   } catch (error) {}
 
   return (
-    <div className='flex-1'>
+    <div className='flex-1 lg:max-w-screen-sm lg:p-8 lg:shadow-lg'>
       <div className='flex items-center'>
         <p className='font-slate-200 text-2xl w-full uppercase my-6 tracking-wider font-bold'>
           {removeDash(params.category)}

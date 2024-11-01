@@ -62,12 +62,14 @@ export default function FieldList({ fields }: FieldListProps) {
 
   return (
     <>
-      {fields.length === 0 && (
+      {fields.length === 0 ? (
         <p className='normal-case my-4 text-center'>
           There are no fields in this category yet. Add some in the category settings.
         </p>
+      ) : (
+        <p className={`${caveat.className} text-start underline text-2xl`}>Fields:</p>
       )}
-      <p className={`${caveat.className} text-start underline text-2xl`}>Fields:</p>
+
       {fields.map((field) => (
         <React.Fragment key={field.name}>
           <div className='p-4 mt-4 shadow-md w-full uppercase text-base flex items-center justify-between bg-slate-100'>

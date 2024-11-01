@@ -24,7 +24,7 @@ export default async function Page({ params }: PageProps) {
   } catch (error) {}
 
   return (
-    <div>
+    <div className='lg:w-2/5 lg:shadow-lg lg:p-8'>
       <Title text={removeDash(title)} />
       <Breadcrumb routes={[]} />
       {categories && <CategoryList categories={categories} />}
