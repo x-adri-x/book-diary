@@ -10,7 +10,7 @@ export default function useAction(actionFunction: Function, onSuccess?: () => vo
   const searchParams = useSearchParams()
   const params = useParams()
 
-  const searchParamsObject = Object.fromEntries(searchParams.entries())
+  const searchParamsObject = searchParams ? Object.fromEntries(searchParams.entries()) : {}
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

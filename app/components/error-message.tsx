@@ -9,8 +9,10 @@ export default function ErrorMessage({ errorMessage }: ErrorMessageProps) {
     <div className='flex items-center space-x-1' aria-live='polite' aria-atomic='true'>
       {errorMessage && (
         <>
-          <ExclamationCircleIcon className='h-8 w-8 text-red-500' />
-          <p className='text-sm text-red-600'>{errorMessage}</p>
+          <ExclamationCircleIcon className='h-8 w-8 text-red-500' data-testid='exclamation-icon' />
+          <p className='text-sm text-red-600' data-testid='error-message'>
+            {errorMessage}
+          </p>
         </>
       )}
     </div>
