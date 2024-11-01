@@ -1,4 +1,3 @@
-import { caveat } from '@/app/fonts/fonts'
 import { db } from '@/database'
 import { field } from '@/database/schema/field'
 import { content } from '@/database/schema/content'
@@ -7,6 +6,7 @@ import { removeDash } from '@/app/utility/utility'
 import Field from '@/app/ui/field'
 import Breadcrumb from '@/app/components/breadcrumb'
 import Title from '@/app/components/title'
+import ErrorMessage from '@/app/components/error-message'
 
 export default async function Item({
   params,
@@ -19,6 +19,7 @@ export default async function Item({
   const { category, item } = searchParams
   let fields
   let contents
+  let errorMessage
 
   try {
     fields = await db
@@ -26,7 +27,7 @@ export default async function Item({
       .from(field)
       .where(eq(field.categoryId, parseInt(category)))
   } catch (error) {
-    console.log(error)
+    errorMessage = 'An error occcured while fetching fields.'
   }
 
   try {
@@ -36,7 +37,7 @@ export default async function Item({
       .where(eq(content.itemId, parseInt(item)))
     console.log(contents)
   } catch (error) {
-    console.log(error)
+    errorMessage = 'An error occured while fetching contents.'
   }
 
   return (
@@ -51,7 +52,11 @@ export default async function Item({
           },
         ]}
       />
-      {fields && contents && fields.map((field) => <Field key={field.id} field={field} contents={contents} />)}
+      {errorMessage ? (
+        <ErrorMessage errorMessage={errorMessage} />
+      ) : (
+        fields && contents && fields.map((field) => <Field key={field.id} field={field} contents={contents} />)
+      )}
     </div>
   )
 }

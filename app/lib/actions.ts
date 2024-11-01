@@ -109,11 +109,13 @@ export async function createItem(
 }
 
 export async function createField(formData: FormData, searchParams: { category: string }, params: Params) {
+  const { id, title, category } = params!
   try {
     await db
       .insert(field)
       .values({ name: formData.get('name') as string, categoryId: parseInt(searchParams.category) })
       .returning({ insertedId: field.id })
+    revalidatePath(`/diaries/${id}/${title}/${category}/settings?category=${searchParams.category}`)
     return { success: `Field was successfully created.` }
   } catch (error) {
     return { error: 'An error occurred while creating field.' }

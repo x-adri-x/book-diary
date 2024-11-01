@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 import { selectFieldSchema } from '@/database/schema/field'
-import { PencilIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { FaceSmileIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useState, useRef } from 'react'
 import CreateFieldForm from './create-field-form'
 import Input from '../components/input'
@@ -63,9 +63,12 @@ export default function FieldList({ fields }: FieldListProps) {
   return (
     <>
       {fields.length === 0 ? (
-        <p className='normal-case my-4 text-center'>
-          There are no fields in this category yet. Add some in the category settings.
-        </p>
+        <div className='mt-8 flex flex-col items-center'>
+          <p className='normal-case my-4 text-center'>
+            There are no fields in this category yet. Let's add some, so you can start creating content.
+          </p>
+          <FaceSmileIcon className='w-8 h-8' />
+        </div>
       ) : (
         <p className={`${caveat.className} text-start underline text-2xl`}>Fields:</p>
       )}

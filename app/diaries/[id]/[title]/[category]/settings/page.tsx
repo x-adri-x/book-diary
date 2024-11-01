@@ -3,6 +3,8 @@ import { field } from '@/database/schema/field'
 import { eq } from 'drizzle-orm'
 import FieldList from '@/app/ui/field-list'
 import Title from '@/app/components/title'
+import Breadcrumb from '@/app/components/breadcrumb'
+import ErrorMessage from '@/app/components/error-message'
 
 export default async function Settings({
   params,
@@ -11,8 +13,10 @@ export default async function Settings({
   params: { id: string; title: string; category: string }
   searchParams: { category: string }
 }) {
+  const { id, title } = params
   const { category } = searchParams
   let fields
+  let errorMessage
 
   try {
     fields = await db
@@ -20,15 +24,16 @@ export default async function Settings({
       .from(field)
       .where(eq(field.categoryId, parseInt(category)))
   } catch (error) {
-    console.log(error)
+    errorMessage = 'An error occured while fetching fields for category.'
   }
 
   return (
-    <div className='lg:flex lg:flex-col'>
-      <div className='flex items-center'>
+    <div className='lg:flex lg:flex-col lg:min-h-96 lg:shadow-lg lg:p-8 lg:min-w-screen-sm'>
+      <div className='text-center'>
         <Title text='Settings' />
       </div>
-      {fields && <FieldList fields={fields} />}
+      <Breadcrumb routes={[{ path: `/diaries/${parseInt(id)}/${title}`, label: 'Categories' }]} />
+      {errorMessage ? <ErrorMessage errorMessage={errorMessage} /> : fields && <FieldList fields={fields} />}
     </div>
   )
 }
