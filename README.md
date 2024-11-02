@@ -10,6 +10,7 @@ A web application for managing notes about books you’re reading, helping you k
 - [Getting Started](#getting-started)
 - [Testing](#testing)
 - [Folder structure](#folder-structure)
+- [Preview images](#preview-images)
 - [Learn more](#learn-more)
 
 ### Features
