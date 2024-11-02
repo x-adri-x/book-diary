@@ -199,6 +199,13 @@ npm run test
 └── tsconfig.json
 ```
 
+### Preview images
+
+<img src="./public/Screenshot%202024-11-02%20at%2015.45.30.png" alt="Login page of the Book Diary application" width="200">
+<img src="./public/Screenshot%202024-11-02%20at%2015.46.16.png" alt='Book categories view' width='200' >
+<img src="./public/Screenshot%202024-11-02%20at%2015.46.24.png" alt='Category view with items' width='200' >
+<img src="./public/Screenshot%202024-11-02%20at%2015.48.55.png" alt='How to page' width='200' >
+
 ### Learn More
 
 To learn more about Next.js, take a look at the following resources:
