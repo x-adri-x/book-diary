@@ -66,7 +66,7 @@ export default function Field({ field, contents }: FieldProps) {
           className={`list-outside list-none flex items-center justify-between w-full underline underline-offset-8 ${caveat.className}`}
         >
           {field.name}
-          {!accordionOpen ? (
+          {accordionOpen ? (
             <ChevronDownIcon className='h-5 w-5 inline-block' />
           ) : (
             <ChevronRightIcon className='h-5 w-5 inline-block' />

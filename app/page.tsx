@@ -7,7 +7,7 @@ import { caveat } from '@/app/fonts/fonts'
 
 export default function Page() {
   return (
-    <div className='h-full lg:max-w-3xl lg:shadow-lg p-8 lg:rounded-lg lg:flex lg:flex-col lg:items-center'>
+    <div className='h-full lg:max-w-3xl lg:shadow-lg lg:p-8 lg:rounded-lg lg:flex lg:flex-col lg:items-center'>
       <h1 className={`${caveat.className} text-5xl text-center mt-4`}>Book Diary</h1>
       <p className='text-base my-8'>
         The ultimate companion for book lovers! Keep track of characters, places, and plot twists in epic, multi-book

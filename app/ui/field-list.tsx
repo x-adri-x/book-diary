@@ -75,7 +75,7 @@ export default function FieldList({ fields }: FieldListProps) {
 
       {fields.map((field) => (
         <React.Fragment key={field.name}>
-          <div className='p-4 mt-4 shadow-md w-full uppercase text-base flex items-center justify-between bg-slate-100'>
+          <div className='p-4 mt-4 shadow-md w-full uppercase text-base flex items-center justify-between bg-slate-50'>
             {field.name}
             <div className='flex'>
               <PencilIcon
