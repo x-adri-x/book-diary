@@ -33,7 +33,7 @@ A web application for managing notes about books you’re reading, helping you k
     •	Neon Database with PostgreSQL
     •	Environment Variables: Ensure you have all necessary environment variables
 
-### Getting Started
+### Getting Started
 
 Clone the repository to your local machine:
 
