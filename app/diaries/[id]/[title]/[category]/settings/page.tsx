@@ -28,7 +28,7 @@ export default async function Settings({
   }
 
   return (
-    <div className='lg:flex lg:flex-col lg:min-h-96 lg:shadow-lg lg:p-8 lg:min-w-screen-sm'>
+    <div>
       <div className='text-center'>
         <Title text='Settings' />
       </div>

@@ -59,6 +59,9 @@ NEON_DATABASE_URL=postgres://username:password@hostname:port/dbname
 
 # Auth.js secret for encryption
 AUTH_SECRET=your-secret-key
+
+# Trusted host for production build
+AUTH_TRUST_HOST=http://localhost:3000
 ```
 
 Run Database Migrations
@@ -118,6 +121,7 @@ npm run test
 │   │   ├── button.tsx
 │   │   ├── empty-list.tsx
 │   │   ├── error-message.tsx
+│   │   ├── footer.tsx
 │   │   ├── form-button.tsx
 │   │   ├── form.tsx
 │   │   ├── input.tsx

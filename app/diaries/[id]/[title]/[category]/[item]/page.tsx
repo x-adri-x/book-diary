@@ -7,6 +7,7 @@ import Field from '@/app/ui/field'
 import Breadcrumb from '@/app/components/breadcrumb'
 import Title from '@/app/components/title'
 import ErrorMessage from '@/app/components/error-message'
+import Link from 'next/link'
 
 export default async function Item({
   params,
@@ -41,7 +42,7 @@ export default async function Item({
   }
 
   return (
-    <div className='lg:flex lg:flex-col lg:w-3/5 lg:min-h-96 lg:max-w-screen-sm lg:p-8 lg:shadow-lg'>
+    <>
       <Title text={removeDash(params.item)} />
       <Breadcrumb
         routes={[
@@ -52,11 +53,19 @@ export default async function Item({
           },
         ]}
       />
-      {errorMessage ? (
-        <ErrorMessage errorMessage={errorMessage} />
-      ) : (
-        fields && contents && fields.map((field) => <Field key={field.id} field={field} contents={contents} />)
+      {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
+      {fields && fields?.length === 0 && (
+        <div className='flex flex-col items-center'>
+          <p>There are no fields in this category yet. Add fields to be able to start creating content.</p>
+          <Link
+            href={`/diaries/${id}/${title}/${params.category}/settings?category=${category}`}
+            className={` text-slate-900 tracking-wide underline underline-offset-2 ml-2`}
+          >
+            Add fields now
+          </Link>
+        </div>
       )}
-    </div>
+      {fields && contents && fields.map((field) => <Field key={field.id} field={field} contents={contents} />)}
+    </>
   )
 }

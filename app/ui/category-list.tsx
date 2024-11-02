@@ -6,8 +6,9 @@ import { useState } from 'react'
 import CreateCategoryForm from './create-category-form'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { addDash } from '../utility/utility'
-import { caveat } from '../fonts/fonts'
+import { addDash } from '@/app/utility/utility'
+import { caveat } from '@/app/fonts/fonts'
+import Button from '@/app/components/button'
 
 type Category = z.infer<typeof selectCategorySchema>
 interface CategoryListProps {
@@ -35,14 +36,7 @@ export default function CategoryList({ categories }: CategoryListProps) {
       ))}
 
       {formOpen && <CreateCategoryForm setFormOpen={setFormOpen} />}
-      {!formOpen && (
-        <button
-          className={`my-6 rounded-md text-slate-100 bg-slate-900 tracking-wider p-2 w-full shadow-md`}
-          onClick={() => setFormOpen(true)}
-        >
-          Add a new category
-        </button>
-      )}
+      {!formOpen && <Button label='Add a new category' onClick={() => setFormOpen(true)} />}
     </>
   )
 }

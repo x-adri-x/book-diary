@@ -14,7 +14,7 @@ export default function Search({ placeholder, disabled }: SearchProps) {
   const path = usePathname()
   const { replace } = useRouter()
 
-  const handleSearch = useDebouncedCallback(async (term: string) => {
+  const handleSearch = async (term: string) => {
     const params = new URLSearchParams(searchParams)
     if (term) {
       params.set('query', term)
@@ -22,7 +22,7 @@ export default function Search({ placeholder, disabled }: SearchProps) {
       params.delete('query')
     }
     replace(`${path}?${params.toString()}`)
-  }, 1000)
+  }
 
   return (
     <div className='relative flex flex-1 flex-shrink-0 mb-4'>

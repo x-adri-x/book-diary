@@ -21,6 +21,9 @@ const config: Config = {
         '100dvh': '100dvh',
         '50dvh': '50dvh',
       },
+      minHeight: {
+        '60dvh': '60dvh',
+      },
       minWidth: {
         'screen-sm': '640px',
       },

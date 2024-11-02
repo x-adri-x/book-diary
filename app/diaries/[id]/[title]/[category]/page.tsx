@@ -24,12 +24,12 @@ export default async function Category({
       .select()
       .from(item)
       .where(sql`${item.bookId} = ${parseInt(id)} and ${item.categoryId} = ${category}`)
-    if (query) items = items.filter((item) => item.name.includes(query))
-    if (items.length === 0) disabled = true
+    if (query) items = items.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()))
+    if (items.length === 0 && query === '') disabled = true
   } catch (error) {}
 
   return (
-    <div className='flex-1 lg:max-w-screen-sm lg:p-8 lg:shadow-lg'>
+    <>
       <div className='flex items-center'>
         <p className='font-slate-200 text-2xl w-full uppercase my-6 tracking-wider font-bold'>
           {removeDash(params.category)}
@@ -39,6 +39,6 @@ export default async function Category({
       <Breadcrumb routes={[{ path: `/diaries/${id}/${title}`, label: 'Categories' }]} />
       <Search placeholder='Search items in this category' disabled={disabled} />
       {items && <ItemsList items={items} />}
-    </div>
+    </>
   )
 }

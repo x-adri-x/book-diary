@@ -13,7 +13,7 @@ export default function SignUpForm() {
   const { loading, errorMessage, handleSubmit, formRef } = useAction(signup)
 
   return (
-    <div className='h-full lg:max-w-3xl lg:shadow-lg p-8 lg:rounded-lg lg:flex lg:flex-col lg:items-center'>
+    <>
       <Form onSubmit={handleSubmit} ref={formRef} heading='Create an account'>
         <div className='w-full'>
           <Input label='Email' placeholder='Enter your email address' type='email'>
@@ -50,6 +50,6 @@ export default function SignUpForm() {
           )}
         </div>
       </Form>
-    </div>
+    </>
   )
 }

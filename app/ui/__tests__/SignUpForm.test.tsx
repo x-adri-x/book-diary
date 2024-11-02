@@ -1,6 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import SignUpForm from '@/app/ui/signup-form'
-import { signup } from '@/app/lib/actions'
 
 jest.mock('@/lib/actions', () => ({
   signup: jest.fn(),

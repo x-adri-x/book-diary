@@ -4,11 +4,12 @@ import { selectItemSchema } from '@/database/schema/item'
 import { useState } from 'react'
 import { z } from 'zod'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { caveat } from '../fonts/fonts'
-import EmptyList from '../components/empty-list'
+import { caveat } from '@/app/fonts/fonts'
+import EmptyList from '@/app/components/empty-list'
 import CreateItemForm from './create-item-form'
-import { addDash } from '../utility/utility'
+import { addDash } from '@/app/utility/utility'
 import Link from 'next/link'
+import Button from '@/app/components/button'
 
 type Item = z.infer<typeof selectItemSchema>
 interface ItemListProps {
@@ -40,14 +41,7 @@ export default function ItemsList({ items }: ItemListProps) {
         </ul>
       )}
       {formOpen && <CreateItemForm setFormOpen={setFormOpen} />}
-      {!formOpen && (
-        <button
-          className={`my-6 rounded-md text-slate-100 bg-slate-900 tracking-wider p-2 w-full shadow-md`}
-          onClick={() => setFormOpen(true)}
-        >
-          Add a new item
-        </button>
-      )}
+      {!formOpen && <Button label='Add a new item' loading={false} onClick={() => setFormOpen(true)} />}
     </>
   )
 }

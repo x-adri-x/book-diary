@@ -9,6 +9,7 @@ import { selectBookSchema } from '@/database/schema/book'
 import CreateBookForm from './create-book-form'
 import EmptyList from '@/app/components/empty-list'
 import { addDash } from '@/app/utility/utility'
+import Button from '../components/button'
 
 type Book = z.infer<typeof selectBookSchema>
 interface BookListProps {
@@ -21,14 +22,7 @@ export default function BookList({ books }: BookListProps) {
   return (
     <>
       {formOpen && <CreateBookForm />}
-      {!formOpen && (
-        <button
-          className={`my-6 rounded-md text-slate-100 bg-slate-900 tracking-wider p-2 w-full shadow-md`}
-          onClick={() => setFormOpen(true)}
-        >
-          Start a new book
-        </button>
-      )}
+      {!formOpen && <Button label='Start a new book' onClick={() => setFormOpen(true)} />}
       {books.length === 0 ? (
         <EmptyList name='book' />
       ) : (
@@ -36,12 +30,11 @@ export default function BookList({ books }: BookListProps) {
           {books.map((book) => (
             <li
               key={book.id}
-              className={`py-4 border pl-4 border-gray-200 shadow-lg rounded-lg mb-4 text-xl cursor-pointer transform scale-100 ease-in-out duration-500 hover:scale-105 ${caveat.className}`}
+              className={`py-4 border pl-4 border-gray-200 shadow-lg rounded-lg mb-4 text-lg cursor-pointer transform scale-100 ease-in-out duration-500 hover:scale-105`}
             >
               <Link href={{ pathname: `${path}/${book.id}/${addDash(book.title.toLowerCase().trim())}` }}>
-                <p>
-                  {book.author}: <span className='font-bold'>{book.title}</span>
-                </p>
+                <p>{book.author}</p>
+                <p className='font-bold'>{book.title}</p>
               </Link>
             </li>
           ))}

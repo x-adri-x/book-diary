@@ -5,8 +5,9 @@ import { selectFieldSchema } from '@/database/schema/field'
 import { FaceSmileIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useState, useRef } from 'react'
 import CreateFieldForm from './create-field-form'
-import Input from '../components/input'
-import ErrorMessage from '../components/error-message'
+import Input from '@/app/components/input'
+import ErrorMessage from '@/app/components/error-message'
+import Button from '@/app/components/button'
 import React from 'react'
 import { editField, deleteField } from '@/app/lib/actions'
 import { usePathname } from 'next/navigation'
@@ -92,21 +93,22 @@ export default function FieldList({ fields }: FieldListProps) {
           <form
             onSubmit={(e) => handleEdit(e, field.id)}
             ref={formRef}
-            className={`space-y-3 w-full bg-slate-100 shadow-md overflow-hidden transition-all ease-in-out duration-1000 ${editingItemId === field.id && actionType === 'edit' ? 'max-h-30rem' : 'max-h-0'}`}
+            className={`space-y-3 w-full bg-slate-50 shadow-md overflow-hidden transition-all ease-in-out duration-1000 ${editingItemId === field.id && actionType === 'edit' ? 'max-h-30rem' : 'max-h-0'}`}
           >
-            <div className={`flex-1 bg-slate-100 p-4`}>
+            <div className={`flex-1 bg-slate-50 p-4`}>
               <h1 className={`mb-3 text-xl`}>Edit field</h1>
               <div className='w-full'>
                 <Input label='Name' placeholder='Field name' />
               </div>
               <ErrorMessage errorMessage={errorMessage} />
+
               <button
-                className={`my-6 rounded-md text-slate-100 bg-slate-900 tracking-wider p-2 w-full shadow-md ${
+                className={`my-6 rounded-md text-slate-100 bg-amber-400 tracking-wider p-2 w-full shadow-md ${
                   loading ? 'opacity-50' : ''
                 }`}
                 disabled={loading}
               >
-                {loading ? 'Creating...' : 'Edit field'}
+                {loading ? 'Loading...' : 'Edit field'}
               </button>
             </div>
           </form>
@@ -116,28 +118,17 @@ export default function FieldList({ fields }: FieldListProps) {
           >
             <p className='px-4 text-red-500 font-bold'>Are you sure you want to delete this field?</p>
             <p className='px-4'>All related content will be deleted from the items.</p>
-            <button
-              className={`my-6 rounded-md text-slate-100 bg-slate-900 tracking-wider p-2 w-full shadow-md ${
-                loading ? 'opacity-50' : ''
-              }`}
-              disabled={loading}
+            <Button
+              label={loading ? 'Loading...' : 'Yes, delete field'}
               onClick={() => handleDelete(field.id)}
-            >
-              {loading ? 'Creating...' : 'Yes, delete field'}
-            </button>
+              loading={loading}
+            />
           </div>
         </React.Fragment>
       ))}
 
       {createFormOpen && <CreateFieldForm setFormOpen={setCreateFormOpen} />}
-      {!createFormOpen && (
-        <button
-          className={`my-6 rounded-md text-slate-100 bg-slate-900 tracking-wider p-2 w-full shadow-md`}
-          onClick={() => setCreateFormOpen(true)}
-        >
-          Add a new field
-        </button>
-      )}
+      {!createFormOpen && <Button label='Add a new field' onClick={() => setCreateFormOpen(true)} />}
     </>
   )
 }
