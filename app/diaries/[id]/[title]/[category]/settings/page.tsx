@@ -1,22 +1,24 @@
 import { db } from '@/database'
-import { field } from '@/database/schema/field'
+import { field, selectFieldSchema } from '@/database/schema/field'
 import { eq } from 'drizzle-orm'
 import FieldList from '@/app/ui/field-list'
 import Title from '@/app/components/title'
 import Breadcrumb from '@/app/components/breadcrumb'
 import ErrorMessage from '@/app/components/error-message'
+import { z } from 'zod'
 
-export default async function Settings({
-  params,
-  searchParams,
-}: {
+type Field = z.infer<typeof selectFieldSchema>
+type Props = {
   params: { id: string; title: string; category: string }
   searchParams: { category: string }
-}) {
+}
+
+export default async function Settings({ params, searchParams }: Props) {
   const { id, title } = params
   const { category } = searchParams
-  let fields
-  let errorMessage
+
+  let fields: Array<Field> | null = null
+  let errorMessage: string | null = null
 
   try {
     fields = await db

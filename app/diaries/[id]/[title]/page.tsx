@@ -1,19 +1,22 @@
 import { db } from '@/database'
 import { eq } from 'drizzle-orm'
-import { category } from '@/database/schema/category'
+import { category, selectCategorySchema } from '@/database/schema/category'
 import { book_category } from '@/database/schema/book-category'
 import CategoryList from '@/app/ui/category-list'
 import { removeDash } from '@/app/utility/utility'
 import Breadcrumb from '@/app/components/breadcrumb'
 import Title from '@/app/components/title'
+import { z } from 'zod'
 
-type PageProps = {
+type Props = {
   params: { id: string; title: string }
 }
 
-export default async function Page({ params }: PageProps) {
+type Category = z.infer<typeof selectCategorySchema>
+
+export default async function Page({ params }: Props) {
   const { id, title } = params
-  let categories
+  let categories: Array<Category> | null = null
 
   try {
     categories = await db

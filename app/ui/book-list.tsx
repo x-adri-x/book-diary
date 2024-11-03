@@ -12,10 +12,10 @@ import { addDash } from '@/app/utility/utility'
 import Button from '../components/button'
 
 type Book = z.infer<typeof selectBookSchema>
-interface BookListProps {
+type Props = {
   books: Book[]
 }
-export default function BookList({ books }: BookListProps) {
+export default function BookList({ books }: Props) {
   const [formOpen, setFormOpen] = useState(false)
   const path = usePathname()
 

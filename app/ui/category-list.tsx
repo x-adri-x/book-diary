@@ -11,11 +11,11 @@ import { caveat } from '@/app/fonts/fonts'
 import Button from '@/app/components/button'
 
 type Category = z.infer<typeof selectCategorySchema>
-interface CategoryListProps {
+type Props = {
   categories: Category[]
 }
 
-export default function CategoryList({ categories }: CategoryListProps) {
+export default function CategoryList({ categories }: Props) {
   const [formOpen, setFormOpen] = useState(false)
   const path = usePathname()
 

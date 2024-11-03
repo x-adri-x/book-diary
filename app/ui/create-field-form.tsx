@@ -8,11 +8,11 @@ import FormButton from '../components/form-button'
 import useAction from '../hooks/useAction'
 import Form from '../components/form'
 
-type CreateFieldFormProps = {
+type Props = {
   setFormOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export default function CreateFieldForm({ setFormOpen }: CreateFieldFormProps) {
+export default function CreateFieldForm({ setFormOpen }: Props) {
   const { loading, errorMessage, handleSubmit, formRef } = useAction(createField, () => setFormOpen(false))
 
   return (

@@ -1,14 +1,17 @@
 import { eq } from 'drizzle-orm'
 import { db } from '@/database'
-import { book } from '@/database/schema/book'
+import { book, selectBookSchema } from '@/database/schema/book'
 import BookList from '../ui/book-list'
 import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/auth'
 import Title from '../components/title'
+import { z } from 'zod'
+
+type Book = z.infer<typeof selectBookSchema>
 
 export default async function Page() {
   const session = await auth()
-  let books
+  let books: Array<Book> | null = null
 
   if (session && session.user?.id) {
     const userId = parseInt(session.user?.id)

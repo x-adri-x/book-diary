@@ -9,7 +9,6 @@ A web application for managing notes about books you’re reading, helping you k
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Testing](#testing)
-- [Folder structure](#folder-structure)
 - [Preview images](#preview-images)
 - [Learn more](#learn-more)
 
@@ -65,6 +64,12 @@ AUTH_SECRET=your-secret-key
 AUTH_TRUST_HOST=http://localhost:3000
 ```
 
+Install dependencies:
+
+```bash
+npm install
+```
+
 Run Database Migrations
 
 In order to set up your database schema, run the following command to generate and apply migrations:
@@ -72,12 +77,6 @@ In order to set up your database schema, run the following command to generate a
 ```bash
 npm run migration:generate
 npm run migration:migrate
-```
-
-Install dependencies:
-
-```bash
-npm install
 ```
 
 Run the application in development mode:
@@ -99,105 +98,6 @@ Run tests using Jest and React Testing Library with the following command:
 
 ```bash
 npm run test
-```
-
-### Folder structure
-
-```
-.
-├── README.md
-├── app
-│   ├── api
-│   │   └── auth
-│   │       └── [...nextauth]
-│   │           └── route.ts
-│   ├── components
-│   │   ├── __tests__
-│   │   │   ├── BreadCrumb.test.tsx
-│   │   │   ├── Button.test.tsx
-│   │   │   ├── ErrorMessage.test.tsx
-│   │   │   ├── Form.test.tsx
-│   │   │   └── Input.test.tsx
-│   │   ├── breadcrumb.tsx
-│   │   ├── button.tsx
-│   │   ├── empty-list.tsx
-│   │   ├── error-message.tsx
-│   │   ├── footer.tsx
-│   │   ├── form-button.tsx
-│   │   ├── form.tsx
-│   │   ├── input.tsx
-│   │   └── title.tsx
-│   ├── diaries
-│   │   ├── [id]
-│   │   │   └── [title]
-│   │   │       ├── [category]
-│   │   │       │   ├── [item]
-│   │   │       │   │   └── page.tsx
-│   │   │       │   ├── page.tsx
-│   │   │       │   └── settings
-│   │   │       │       └── page.tsx
-│   │   │       └── page.tsx
-│   │   └── page.tsx
-│   ├── favicon.ico
-│   ├── fonts
-│   │   ├── GeistMonoVF.woff
-│   │   ├── GeistVF.woff
-│   │   └── fonts.ts
-│   ├── globals.css
-│   ├── hooks
-│   │   └── useAction.ts
-│   ├── howto
-│   │   └── page.tsx
-│   ├── layout.tsx
-│   ├── lib
-│   │   └── actions.ts
-│   ├── page.tsx
-│   ├── signup
-│   │   └── page.tsx
-│   ├── ui
-│   │   ├── __tests__
-│   │   │   ├── Field.test.tsx
-│   │   │   └── SignUpForm.test.tsx
-│   │   ├── book-list.tsx
-│   │   ├── category-list.tsx
-│   │   ├── category-setting.tsx
-│   │   ├── create-book-form.tsx
-│   │   ├── create-category-form.tsx
-│   │   ├── create-field-form.tsx
-│   │   ├── create-item-form.tsx
-│   │   ├── field-list.tsx
-│   │   ├── field.tsx
-│   │   ├── items-list.tsx
-│   │   ├── login-form.tsx
-│   │   ├── search.tsx
-│   │   └── signup-form.tsx
-│   └── utility
-│       └── utility.ts
-├── auth.ts
-├── database
-│   ├── index.ts
-│   └── schema
-│       ├── book-category.ts
-│       ├── book.ts
-│       ├── category.ts
-│       ├── content.ts
-│       ├── field.ts
-│       ├── item.ts
-│       └── user.ts
-├── drizzle.config.ts
-├── jest.config.ts
-├── jest.setup.ts
-├── middleware.ts
-├── next-env.d.ts
-├── next.config.mjs
-├── package-lock.json
-├── package.json
-├── postcss.config.mjs
-├── prettierrc.json
-├── public
-│   └── howto.png
-├── tailwind.config.ts
-└── tsconfig.json
 ```
 
 ### Preview images

@@ -28,6 +28,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: {},
         password: {},
       },
+
       authorize: async (credentials): Promise<User | null> => {
         let user = null
         const parsedCredentials = z

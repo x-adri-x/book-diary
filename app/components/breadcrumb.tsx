@@ -10,11 +10,11 @@ type Route = {
   label: string
 }
 
-type BreadCrumbProps = {
+type Props = {
   routes: Array<Route>
 }
 
-export default function Breadcrumb({ routes }: BreadCrumbProps) {
+export default function Breadcrumb({ routes }: Props) {
   const home = '/diaries'
 
   return (

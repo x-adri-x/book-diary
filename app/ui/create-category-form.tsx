@@ -8,11 +8,11 @@ import Form from '../components/form'
 import FormButton from '../components/form-button'
 import useAction from '../hooks/useAction'
 
-type CreateCategoryFormProps = {
+type Props = {
   setFormOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export default function CreateCategoryForm({ setFormOpen }: CreateCategoryFormProps) {
+export default function CreateCategoryForm({ setFormOpen }: Props) {
   const { loading, errorMessage, handleSubmit, formRef } = useAction(createCategory, () => setFormOpen(false))
 
   return (

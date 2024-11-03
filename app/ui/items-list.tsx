@@ -12,10 +12,10 @@ import Link from 'next/link'
 import Button from '@/app/components/button'
 
 type Item = z.infer<typeof selectItemSchema>
-interface ItemListProps {
+type Props = {
   items: Item[]
 }
-export default function ItemsList({ items }: ItemListProps) {
+export default function ItemsList({ items }: Props) {
   const [formOpen, setFormOpen] = useState(false)
   const path = usePathname()
   const searchParams = useSearchParams()

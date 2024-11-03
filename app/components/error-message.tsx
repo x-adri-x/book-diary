@@ -1,10 +1,10 @@
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 
-type ErrorMessageProps = {
+type Props = {
   errorMessage: string | null
 }
 
-export default function ErrorMessage({ errorMessage }: ErrorMessageProps) {
+export default function ErrorMessage({ errorMessage }: Props) {
   return (
     <div className='flex items-center space-x-1' aria-live='polite' aria-atomic='true'>
       {errorMessage && (

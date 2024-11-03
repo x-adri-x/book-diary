@@ -14,12 +14,12 @@ import ErrorMessage from '../components/error-message'
 
 type Field = z.infer<typeof fieldSchema>
 type Content = z.infer<typeof selectContentSchema>
-type FieldProps = {
+type Props = {
   field: Field
   contents: Array<Content>
 }
 
-export default function Field({ field, contents }: FieldProps) {
+export default function Field({ field, contents }: Props) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [accordionOpen, setAccordionOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)

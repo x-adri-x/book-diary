@@ -15,6 +15,7 @@ describe('Breadcrumb Component', () => {
   it('renders all routes passed as props', () => {
     render(<Breadcrumb routes={mockRoutes} />)
 
+    //TODO: use something else instead of forEach
     mockRoutes.forEach((route) => {
       const routeLink = screen.getByText(new RegExp(route.label, 'i'))
       expect(routeLink).toBeInTheDocument()

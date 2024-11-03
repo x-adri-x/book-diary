@@ -3,6 +3,7 @@
 import { useParams, useSearchParams } from 'next/navigation'
 import { useState, useRef } from 'react'
 
+//TODO: change type from Function
 export default function useAction(actionFunction: Function, onSuccess?: () => void) {
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)

@@ -14,11 +14,11 @@ import { usePathname } from 'next/navigation'
 import { caveat } from '../fonts/fonts'
 
 type Field = z.infer<typeof selectFieldSchema>
-interface FieldListProps {
+type Props = {
   fields: Field[]
 }
 
-export default function FieldList({ fields }: FieldListProps) {
+export default function FieldList({ fields }: Props) {
   const [editingItemId, setEditingItemId] = useState<number | null>(null)
   const [createFormOpen, setCreateFormOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)

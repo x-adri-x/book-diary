@@ -1,11 +1,11 @@
-type InputProps = {
+type Props = {
   label: string
   placeholder: string
   type?: string
   children?: React.ReactNode | null
 }
 
-export default function Input({ label, placeholder, type = 'text', children }: InputProps) {
+export default function Input({ label, placeholder, type = 'text', children }: Props) {
   return (
     <div>
       <label className='mb-1 mt-5 block text-xs font-medium text-gray-900 text-left' htmlFor={label.toLowerCase()}>

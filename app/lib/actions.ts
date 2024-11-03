@@ -23,11 +23,12 @@ interface Params {
 
 export async function createBook(formData: FormData, searchParams: ReadonlyURLSearchParams, params: Params) {
   const session = await auth()
-  let bookId
-  let title
+  let bookId: number
+  let title: string
 
-  if (session && session.user?.id) {
-    const userId = parseInt(session.user?.id)
+  if (session && session.user) {
+    if (!session.user.id) return { error: 'User was not found.' }
+    const userId = parseInt(session.user.id)
 
     const data = insertBookSchema.parse({
       title: formData.get('title'),
@@ -74,12 +75,15 @@ export async function createCategory(formData: FormData, searchParams: ReadonlyU
   const data = insertCategorySchema.parse({
     name: formData.get('name'),
   })
-  const bookId = params.id as string
+
+  if (typeof params.id !== 'string') return { error: 'A single ID must be provided for book record.' }
+  if (typeof params.title !== 'string') return { error: 'A single title must be provided for book record.' }
+
   try {
     const insertedIds = await db.insert(category).values({ name: data.name }).returning({ insertedId: category.id })
 
-    await db.insert(book_category).values({ bookId: parseInt(bookId), categoryId: insertedIds[0].insertedId })
-    revalidatePath(`/diaries/${bookId}/${params.title as string}`)
+    await db.insert(book_category).values({ bookId: parseInt(params.id), categoryId: insertedIds[0].insertedId })
+    revalidatePath(`/diaries/${params.id}/${params.title}`)
     return { success: `Category was successfully created.` }
   } catch (error) {
     return { error: 'An error occurred while creating the category.' }
@@ -91,12 +95,16 @@ export async function createItem(
   searchParams: { category: string },
   params: { id: string; title: string; category: string }
 ) {
-  const { id, title, category } = params!
+  if (!params) return { error: 'Parameters must be provided.' }
+  if (typeof formData.get('name') !== 'string') return { error: 'A name has to be provided for the item.' }
+  const name = formData.get('name')
+  const { id, title, category } = params
+
   try {
     await db
       .insert(item)
       .values({
-        name: formData.get('name') as string,
+        name: name as string,
         categoryId: parseInt(searchParams.category),
         bookId: parseInt(id),
       })
@@ -123,10 +131,11 @@ export async function createField(formData: FormData, searchParams: { category: 
 }
 
 export async function editField(formData: FormData, fieldId: number, path: string) {
+  const name = formData.get('name')
   try {
     await db
       .update(field)
-      .set({ name: formData.get('name') as string })
+      .set({ name: name as string })
       .where(eq(field.id, fieldId))
     revalidatePath(path)
     return { success: `Field was successfully updated.` }
@@ -226,9 +235,9 @@ export async function signup(formData: FormData) {
     if (!insertedId) {
       return { error: 'Failed to register. Please try again later.' }
     }
-    redirect('/diaries')
   } catch (error) {
     console.error(error)
     return { error: 'Password encryption failed.' }
   }
+  redirect('/diaries')
 }

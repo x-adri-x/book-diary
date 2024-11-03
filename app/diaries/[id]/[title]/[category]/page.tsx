@@ -1,22 +1,23 @@
 import ItemsList from '@/app/ui/items-list'
 import { db } from '@/database'
-import { item } from '@/database/schema/item'
+import { item, selectItemSchema } from '@/database/schema/item'
 import { sql } from 'drizzle-orm'
 import { removeDash } from '@/app/utility/utility'
 import CategorySettings from '@/app/ui/category-setting'
 import Search from '@/app/ui/search'
 import Breadcrumb from '@/app/components/breadcrumb'
+import { z } from 'zod'
 
-export default async function Category({
-  params,
-  searchParams,
-}: {
+type Item = z.infer<typeof selectItemSchema>
+type Props = {
   params: { id: string; title: string; category: string }
   searchParams: { category: string; query: string }
-}) {
+}
+
+export default async function Category({ params, searchParams }: Props) {
   const { id, title } = params
   const { category, query } = searchParams
-  let items
+  let items: Array<Item> | null = null
   let disabled = false
 
   try {
