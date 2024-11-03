@@ -66,7 +66,7 @@ export default function FieldList({ fields }: Props) {
       {fields.length === 0 ? (
         <div className='mt-8 flex flex-col items-center'>
           <p className='normal-case my-4 text-center'>
-            There are no fields in this category yet. Let's add some, so you can start creating content.
+            There are no fields in this category yet. Let&apos;s add some, so you can start creating content.
           </p>
           <FaceSmileIcon className='w-8 h-8' />
         </div>

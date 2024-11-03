@@ -1,4 +1,4 @@
-import { FormEventHandler, ForwardedRef, RefObject, forwardRef } from 'react'
+import { FormEventHandler, ForwardedRef, forwardRef } from 'react'
 
 type Props = {
   children: React.ReactNode

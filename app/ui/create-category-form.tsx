@@ -16,7 +16,7 @@ export default function CreateCategoryForm({ setFormOpen }: Props) {
   const { loading, errorMessage, handleSubmit, formRef } = useAction(createCategory, () => setFormOpen(false))
 
   return (
-    <Form onSubmit={handleSubmit} heading='Create a new category.'>
+    <Form onSubmit={handleSubmit} ref={formRef} heading='Create a new category.'>
       <div className='w-full'>
         <Input label='Name' placeholder='Name of the category' />
       </div>

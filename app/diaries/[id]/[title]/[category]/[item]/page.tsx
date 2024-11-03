@@ -31,6 +31,7 @@ export default async function Item({ params, searchParams }: Props) {
       .from(field)
       .where(eq(field.categoryId, parseInt(category)))
   } catch (error) {
+    if (error instanceof Error) errorMessage = error.message
     errorMessage = 'An error occcured while fetching fields.'
   }
 
@@ -40,6 +41,7 @@ export default async function Item({ params, searchParams }: Props) {
       .from(content)
       .where(eq(content.itemId, parseInt(item)))
   } catch (error) {
+    if (error instanceof Error) errorMessage = error.message
     errorMessage = 'An error occured while fetching contents.'
   }
 

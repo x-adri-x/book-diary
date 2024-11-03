@@ -26,6 +26,7 @@ export default async function Settings({ params, searchParams }: Props) {
       .from(field)
       .where(eq(field.categoryId, parseInt(category)))
   } catch (error) {
+    if (error instanceof Error) errorMessage = error.message
     errorMessage = 'An error occured while fetching fields for category.'
   }
 

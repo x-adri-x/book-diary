@@ -21,7 +21,7 @@ interface Params {
   [key: string]: string | string[]
 }
 
-export async function createBook(formData: FormData, searchParams: ReadonlyURLSearchParams, params: Params) {
+export async function createBook(formData: FormData) {
   const session = await auth()
   let bookId: number
   let title: string
@@ -63,6 +63,7 @@ export async function createBook(formData: FormData, searchParams: ReadonlyURLSe
       await db.insert(book_category).values({ bookId: bookId, categoryId: notesCategoryIds[0].id })
       revalidatePath('/diaries')
     } catch (error) {
+      if (error instanceof Error) return { error: error.message }
       return { error: 'An error occurred while creating the book.' }
     }
     //TODO: I will might want to change, and not involve the book id in the path
@@ -71,7 +72,7 @@ export async function createBook(formData: FormData, searchParams: ReadonlyURLSe
   return null
 }
 
-export async function createCategory(formData: FormData, searchParams: ReadonlyURLSearchParams, params: Params) {
+export async function createCategory(formData: FormData, _searchParams: ReadonlyURLSearchParams, params: Params) {
   const data = insertCategorySchema.parse({
     name: formData.get('name'),
   })
@@ -86,6 +87,7 @@ export async function createCategory(formData: FormData, searchParams: ReadonlyU
     revalidatePath(`/diaries/${params.id}/${params.title}`)
     return { success: `Category was successfully created.` }
   } catch (error) {
+    if (error instanceof Error) return { error: error.message }
     return { error: 'An error occurred while creating the category.' }
   }
 }
@@ -112,6 +114,7 @@ export async function createItem(
     revalidatePath(`/diaries/${id}/${title}/${category}?category=${searchParams.category}`)
     return { success: `Item was successfully created.` }
   } catch (error) {
+    if (error instanceof Error) return { error: error.message }
     return { error: 'An error occurred while creating this item.' }
   }
 }
@@ -126,6 +129,7 @@ export async function createField(formData: FormData, searchParams: { category: 
     revalidatePath(`/diaries/${id}/${title}/${category}/settings?category=${searchParams.category}`)
     return { success: `Field was successfully created.` }
   } catch (error) {
+    if (error instanceof Error) return { error: error.message }
     return { error: 'An error occurred while creating field.' }
   }
 }
@@ -140,6 +144,7 @@ export async function editField(formData: FormData, fieldId: number, path: strin
     revalidatePath(path)
     return { success: `Field was successfully updated.` }
   } catch (error) {
+    if (error instanceof Error) return { error: error.message }
     return { error: 'An error occurred while updating field.' }
   }
 }
@@ -150,6 +155,7 @@ export async function deleteField(fieldId: number, path: string) {
     revalidatePath(path)
     return { success: `Field was successfully deleted.` }
   } catch (error) {
+    if (error instanceof Error) return { error: error.message }
     return { error: 'An error occurred while updating field.' }
   }
 }
@@ -181,7 +187,7 @@ export async function editContent(
     revalidatePath(`${path.replace(`/${params.item}`, `?category=${categoryId}&item=${itemId}`)}`)
     return { success: 'Updating of content was successful.' }
   } catch (error) {
-    console.log(error)
+    if (error instanceof Error) return { error: error.message }
     return { error: 'An error occurred while creating content.' }
   }
 }
@@ -236,7 +242,7 @@ export async function signup(formData: FormData) {
       return { error: 'Failed to register. Please try again later.' }
     }
   } catch (error) {
-    console.error(error)
+    if (error instanceof Error) return { error: error.message }
     return { error: 'Password encryption failed.' }
   }
   redirect('/diaries')

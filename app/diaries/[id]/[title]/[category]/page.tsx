@@ -7,6 +7,7 @@ import CategorySettings from '@/app/ui/category-setting'
 import Search from '@/app/ui/search'
 import Breadcrumb from '@/app/components/breadcrumb'
 import { z } from 'zod'
+import ErrorMessage from '@/app/components/error-message'
 
 type Item = z.infer<typeof selectItemSchema>
 type Props = {
@@ -19,6 +20,7 @@ export default async function Category({ params, searchParams }: Props) {
   const { category, query } = searchParams
   let items: Array<Item> | null = null
   let disabled = false
+  let errorMessage: string | null = null
 
   try {
     items = await db
@@ -27,7 +29,10 @@ export default async function Category({ params, searchParams }: Props) {
       .where(sql`${item.bookId} = ${parseInt(id)} and ${item.categoryId} = ${category}`)
     if (query) items = items.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()))
     if (items.length === 0 && query === '') disabled = true
-  } catch (error) {}
+  } catch (error) {
+    if (error instanceof Error) errorMessage = error.message
+    errorMessage = 'An error occured while fetching items.'
+  }
 
   return (
     <>
@@ -40,6 +45,7 @@ export default async function Category({ params, searchParams }: Props) {
       <Breadcrumb routes={[{ path: `/diaries/${id}/${title}`, label: 'Categories' }]} />
       <Search placeholder='Search items in this category' disabled={disabled} />
       {items && <ItemsList items={items} />}
+      {errorMessage && <ErrorMessage errorMessage={errorMessage} />}
     </>
   )
 }

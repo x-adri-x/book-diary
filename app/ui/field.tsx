@@ -27,15 +27,18 @@ export default function Field({ field, contents }: Props) {
   const params = useParams()
   const path = usePathname()
   const searchParams = useSearchParams()
-  const categoryId = parseInt(searchParams?.get('category')!)
-  const itemId = parseInt(searchParams?.get('item')!)
+  const categoryId = Number(searchParams.get('category'))
+  const itemId = Number(searchParams.get('item'))
 
   const initialContent = useMemo(() => {
-    return contents.find((content) => content.fieldId === field.id)?.text || ''
+    const content = contents.find((content) => content.fieldId === field.id)
+    if (content) return content.text
+    return ''
   }, [field.id, contents])
 
-  const [content, _] = useState(initialContent)
+  const [content] = useState(initialContent)
   const [editedContent, setEditedContent] = useState(initialContent)
+
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditedContent(e.target.value)
   }
@@ -44,13 +47,15 @@ export default function Field({ field, contents }: Props) {
     setErrorMessage(null)
     setLoading(true)
 
-    const response = await editContent(editedContent, field.id!, categoryId, itemId, params, path)
-    if (response && response.error) {
-      setErrorMessage(response.error)
-    }
-    if (response && response.success) {
-      setLoading(false)
-      setIsEditing(false)
+    if (field.id) {
+      const response = await editContent(editedContent, field.id, categoryId, itemId, params, path)
+      if (response && response.error) {
+        setErrorMessage(response.error)
+      }
+      if (response && response.success) {
+        setLoading(false)
+        setIsEditing(false)
+      }
     }
   }
 

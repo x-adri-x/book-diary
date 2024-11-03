@@ -16,7 +16,7 @@ export default function CreateItemForm({ setFormOpen }: Props) {
   const { loading, errorMessage, handleSubmit, formRef } = useAction(createItem, () => setFormOpen(false))
 
   return (
-    <Form onSubmit={handleSubmit} heading='Add a new item.'>
+    <Form onSubmit={handleSubmit} ref={formRef} heading='Add a new item.'>
       <div className='w-full'>
         <Input label='Name' placeholder="Item's name" />
       </div>
