@@ -1,10 +1,18 @@
 'use client'
 
+import { Params } from 'next/dist/server/request/params'
 import { useParams, useSearchParams } from 'next/navigation'
 import { useState, useRef } from 'react'
+import { SearchParamsObject } from '../types/types'
 
-//TODO: change type from Function
-export default function useAction(actionFunction: Function, onSuccess?: () => void) {
+export default function useAction(
+  actionFunction: (
+    formData: FormData,
+    searchParams: SearchParamsObject,
+    params: Params
+  ) => Promise<{ error: string } | { success: string } | null>,
+  onSuccess?: () => void
+) {
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -21,15 +29,17 @@ export default function useAction(actionFunction: Function, onSuccess?: () => vo
     const formData = new FormData(event.currentTarget)
     const response = await actionFunction(formData, { ...searchParamsObject }, params)
 
-    if (response && response.error) {
-      setErrorMessage(response.error)
-      setLoading(false)
-    }
+    if (response) {
+      if ('error' in response) {
+        setErrorMessage(response.error)
+        setLoading(false)
+      }
 
-    if (response && response.success) {
-      setLoading(false)
-      formRef.current?.reset()
-      if (onSuccess) onSuccess()
+      if ('success' in response) {
+        setLoading(false)
+        formRef.current?.reset()
+        if (onSuccess) onSuccess()
+      }
     }
   }
 

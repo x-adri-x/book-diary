@@ -1,9 +1,9 @@
 'use server'
 
 import { db } from '@/database'
-import { book, insertBookSchema } from '@/database/schema/book'
+import { book } from '@/database/schema/book'
 import { user } from '@/database/schema/user'
-import { category, insertCategorySchema } from '@/database/schema/category'
+import { category } from '@/database/schema/category'
 import { item } from '@/database/schema/item'
 import { field } from '@/database/schema/field'
 import { content } from '@/database/schema/content'
@@ -14,14 +14,21 @@ import bcrypt from 'bcrypt'
 import { eq, sql } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import { auth } from '@/auth'
-import { ReadonlyURLSearchParams, redirect } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { addDash } from '../utility/utility'
+import { SearchParamsObject } from '../types/types'
+import { Params } from 'next/dist/server/request/params'
+import {
+  CreateBookSchema,
+  CreateCategorySchema,
+  CreateFieldSchema,
+  CreateItemSchema,
+  SignupSchema,
+} from '../utility/validation/ui_contract'
+import zodSchemaValidator from '@/app/utility/validation/validator'
 
-interface Params {
-  [key: string]: string | string[]
-}
-
-export async function createBook(formData: FormData) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function createBook(formData: FormData, searchParams: SearchParamsObject, params: Params) {
   const session = await auth()
   let bookId: number
   let title: string
@@ -30,58 +37,54 @@ export async function createBook(formData: FormData) {
     if (!session.user.id) return { error: 'User was not found.' }
     const userId = parseInt(session.user.id)
 
-    const data = insertBookSchema.parse({
-      title: formData.get('title'),
-      author: formData.get('author'),
-      userId: userId,
-    })
+    const parsed = zodSchemaValidator({ formData, schema: CreateBookSchema })
+    if (parsed) {
+      try {
+        const result = await db.select().from(book)
 
-    try {
-      const result = await db.select().from(book)
+        // if no book was added before, add the default categories to db
+        if (result.length === 0) {
+          await db.insert(category).values({ name: 'Characters' })
+          await db.insert(category).values({ name: 'Notes' })
+        }
 
-      // if no book was added before, add the default categories to db
-      if (result.length === 0) {
-        await db.insert(category).values({ name: 'Characters' })
-        await db.insert(category).values({ name: 'Notes' })
+        const insertedIds = await db
+          .insert(book)
+          .values({ title: parsed.title, author: parsed.author, userId: userId })
+          .returning({ insertedId: book.id })
+
+        const characterCategoryIds = await db
+          .select({ id: category.id })
+          .from(category)
+          .where(eq(category.name, 'Characters'))
+        const notesCategoryIds = await db.select({ id: category.id }).from(category).where(eq(category.name, 'Notes'))
+
+        bookId = insertedIds[0].insertedId
+        title = addDash(parsed.title.toLowerCase().trim())
+
+        await db.insert(book_category).values({ bookId: bookId, categoryId: characterCategoryIds[0].id })
+        await db.insert(book_category).values({ bookId: bookId, categoryId: notesCategoryIds[0].id })
+        revalidatePath('/diaries')
+      } catch (error) {
+        if (error instanceof Error) return { error: error.message }
+        return { error: 'An error occurred while creating the book.' }
       }
-
-      const insertedIds = await db
-        .insert(book)
-        .values({ title: data.title, author: data.author, userId: userId })
-        .returning({ insertedId: book.id })
-
-      const characterCategoryIds = await db
-        .select({ id: category.id })
-        .from(category)
-        .where(eq(category.name, 'Characters'))
-      const notesCategoryIds = await db.select({ id: category.id }).from(category).where(eq(category.name, 'Notes'))
-
-      bookId = insertedIds[0].insertedId
-      title = addDash(data.title.toLowerCase().trim())
-
-      await db.insert(book_category).values({ bookId: bookId, categoryId: characterCategoryIds[0].id })
-      await db.insert(book_category).values({ bookId: bookId, categoryId: notesCategoryIds[0].id })
-      revalidatePath('/diaries')
-    } catch (error) {
-      if (error instanceof Error) return { error: error.message }
-      return { error: 'An error occurred while creating the book.' }
+      //TODO: I will might want to change, and not involve the book id in the path
+      redirect(`/diaries/${bookId}/${title}`)
     }
-    //TODO: I will might want to change, and not involve the book id in the path
-    redirect(`/diaries/${bookId}/${title}`)
   }
   return null
 }
 
-export async function createCategory(formData: FormData, _searchParams: ReadonlyURLSearchParams, params: Params) {
-  const data = insertCategorySchema.parse({
-    name: formData.get('name'),
-  })
+export async function createCategory(formData: FormData, _searchParams: SearchParamsObject, params: Params) {
+  const data = Object.fromEntries(formData)
 
   if (typeof params.id !== 'string') return { error: 'A single ID must be provided for book record.' }
   if (typeof params.title !== 'string') return { error: 'A single title must be provided for book record.' }
 
   try {
-    const insertedIds = await db.insert(category).values({ name: data.name }).returning({ insertedId: category.id })
+    const parsed = CreateCategorySchema.parse(data)
+    const insertedIds = await db.insert(category).values({ name: parsed.name }).returning({ insertedId: category.id })
 
     await db.insert(book_category).values({ bookId: parseInt(params.id), categoryId: insertedIds[0].insertedId })
     revalidatePath(`/diaries/${params.id}/${params.title}`)
@@ -92,21 +95,20 @@ export async function createCategory(formData: FormData, _searchParams: Readonly
   }
 }
 
-export async function createItem(
-  formData: FormData,
-  searchParams: { category: string },
-  params: { id: string; title: string; category: string }
-) {
+export async function createItem(formData: FormData, searchParams: SearchParamsObject, params: Params) {
   if (!params) return { error: 'Parameters must be provided.' }
-  if (typeof formData.get('name') !== 'string') return { error: 'A name has to be provided for the item.' }
-  const name = formData.get('name')
   const { id, title, category } = params
+  const data = Object.fromEntries(formData)
 
+  if (typeof id !== 'string') {
+    return { error: 'A single id is expected.' }
+  }
   try {
+    const parsed = CreateItemSchema.parse(data)
     await db
       .insert(item)
       .values({
-        name: name as string,
+        name: parsed.name,
         categoryId: parseInt(searchParams.category),
         bookId: parseInt(id),
       })
@@ -119,12 +121,15 @@ export async function createItem(
   }
 }
 
-export async function createField(formData: FormData, searchParams: { category: string }, params: Params) {
+export async function createField(formData: FormData, searchParams: SearchParamsObject, params: Params) {
   const { id, title, category } = params!
+  const data = Object.fromEntries(formData)
+
   try {
+    const parsed = CreateFieldSchema.parse(data)
     await db
       .insert(field)
-      .values({ name: formData.get('name') as string, categoryId: parseInt(searchParams.category) })
+      .values({ name: parsed.name, categoryId: parseInt(searchParams.category) })
       .returning({ insertedId: field.id })
     revalidatePath(`/diaries/${id}/${title}/${category}/settings?category=${searchParams.category}`)
     return { success: `Field was successfully created.` }
@@ -135,12 +140,11 @@ export async function createField(formData: FormData, searchParams: { category: 
 }
 
 export async function editField(formData: FormData, fieldId: number, path: string) {
-  const name = formData.get('name')
+  const data = Object.fromEntries(formData)
+
   try {
-    await db
-      .update(field)
-      .set({ name: name as string })
-      .where(eq(field.id, fieldId))
+    const parsed = CreateFieldSchema.parse(data)
+    await db.update(field).set({ name: parsed.name }).where(eq(field.id, fieldId))
     revalidatePath(path)
     return { success: `Field was successfully updated.` }
   } catch (error) {
@@ -204,9 +208,9 @@ export async function authenticate(formData: FormData) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
-          return 'Invalid credentials.'
+          return { error: 'Invalid credentials.' }
         default:
-          return 'Something went wrong.'
+          return { error: 'Something went wrong while authenticating.' }
       }
     }
     throw error
@@ -214,27 +218,25 @@ export async function authenticate(formData: FormData) {
 }
 
 export async function signup(formData: FormData) {
-  const password = formData.get('password') as string
-  const confirmPassword = formData.get('confirm-password')!
-  const email = formData.get('email') as string
-
-  if (password !== confirmPassword) {
-    return { error: 'The passwords entered do not match. Please try again.' }
-  }
+  const data = Object.fromEntries(formData)
 
   try {
-    const existingUser = await db.select().from(user).where(eq(user.email, email))
+    const parsed = SignupSchema.parse(data)
+    if (parsed.password !== parsed.confirmPassword) {
+      return { error: 'The passwords entered do not match. Please try again.' }
+    }
+    const existingUser = await db.select().from(user).where(eq(user.email, parsed.email))
     if (existingUser.length !== 0) {
       return { error: 'Email is already registered.' }
     }
 
     const saltRounds = 10
     const salt = await bcrypt.genSalt(saltRounds)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    const hashedPassword = await bcrypt.hash(parsed.password, salt)
 
     const insertedId = await db
       .insert(user)
-      .values({ password: hashedPassword, email: email })
+      .values({ password: hashedPassword, email: parsed.email })
       .onConflictDoNothing()
       .returning({ insertedId: user.id })
 
