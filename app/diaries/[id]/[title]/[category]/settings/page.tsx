@@ -9,11 +9,13 @@ import { z } from 'zod'
 
 type Field = z.infer<typeof selectFieldSchema>
 type Props = {
-  params: { id: string; title: string; category: string }
-  searchParams: { category: string }
+  params: Promise<{ id: string; title: string; category: string }>
+  searchParams: Promise<{ category: string }>
 }
 
-export default async function Settings({ params, searchParams }: Props) {
+export default async function Settings(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { id, title } = params
   const { category } = searchParams
 

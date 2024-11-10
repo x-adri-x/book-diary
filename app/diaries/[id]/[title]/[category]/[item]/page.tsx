@@ -13,18 +13,20 @@ import { z } from 'zod'
 type Field = z.infer<typeof selectFieldSchema>
 type Content = z.infer<typeof selectContentSchema>
 type Props = {
-  params: { id: string; title: string; category: string; item: string }
-  searchParams: { category: string; item: string }
+  params: Promise<{ id: string; title: string; category: string; item: string }>
+  searchParams: Promise<{ category: string; item: string }>
 }
 
-export default async function Item({ params, searchParams }: Props) {
+export default async function Item(props: Props) {
+  const searchParams = await props.searchParams
+  const params = await props.params
   const { id, title } = params
   const { category, item } = searchParams
 
   let fields: Array<Field> | null = null
   let contents: Array<Content> | null = null
   let errorMessage: string | null = null
-
+  //TODO: extract fetching to separate functions
   try {
     fields = await db
       .select()

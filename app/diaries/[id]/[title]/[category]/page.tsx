@@ -11,11 +11,13 @@ import ErrorMessage from '@/app/components/error-message'
 
 type Item = z.infer<typeof selectItemSchema>
 type Props = {
-  params: { id: string; title: string; category: string }
-  searchParams: { category: string; query: string }
+  params: Promise<{ id: string; title: string; category: string }>
+  searchParams: Promise<{ category: string; query: string }>
 }
 
-export default async function Category({ params, searchParams }: Props) {
+export default async function Category(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { id, title } = params
   const { category, query } = searchParams
   let items: Array<Item> | null = null

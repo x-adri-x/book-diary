@@ -10,16 +10,17 @@ import { z } from 'zod'
 import ErrorMessage from '@/app/components/error-message'
 
 type Props = {
-  params: { id: string; title: string }
+  params: Promise<{ id: string; title: string }>
 }
 
 type Category = z.infer<typeof selectCategorySchema>
 
-export default async function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const params = await props.params
   const { id, title } = params
   let categories: Array<Category> | null = null
   let errorMessage: string | null = null
-
+  //TODO: query the db for data
   try {
     categories = await db
       .select({ name: category.name, id: category.id })

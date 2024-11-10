@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -20,17 +20,17 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.35.2",
     "drizzle-zod": "^0.5.1",
-    "next": "^14.1.1",
+    "next": "15.0.2",
     "next-auth": "^5.0.0-beta.25",
     "pg": "^8.13.0",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "19.0.0-rc-02c0e824-20241028",
+    "react-dom": "19.0.0-rc-02c0e824-20241028",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.14.0",
-    "@next/eslint-plugin-next": "^15.0.2",
+    "@next/eslint-plugin-next": "15.0.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
@@ -38,11 +38,11 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^20",
     "@types/pg": "^8.11.10",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "drizzle-kit": "^0.26.2",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^15.0.1",
+    "eslint-config-next": "15.0.2",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
@@ -58,5 +58,9 @@
     "tsx": "^4.19.1",
     "typescript": "^5",
     "typescript-eslint": "^8.12.2"
+  },
+  "overrides": {
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   }
 }
