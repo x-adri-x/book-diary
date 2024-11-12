@@ -11,7 +11,6 @@ import Button from '@/app/components/button'
 import React from 'react'
 import { editField, deleteField } from '@/app/lib/actions'
 import { usePathname } from 'next/navigation'
-import { caveat } from '../fonts/fonts'
 
 type Field = z.infer<typeof selectFieldSchema>
 type Props = {
@@ -20,7 +19,6 @@ type Props = {
 
 export default function FieldList({ fields }: Props) {
   const [editingItemId, setEditingItemId] = useState<number | null>(null)
-  const [createFormOpen, setCreateFormOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [actionType, setActionType] = useState('')
@@ -63,16 +61,15 @@ export default function FieldList({ fields }: Props) {
 
   return (
     <>
-      {fields.length === 0 ? (
+      {fields.length === 0 && (
         <div className='mt-8 flex flex-col items-center'>
           <p className='normal-case my-4 text-center'>
             There are no fields in this category yet. Let&apos;s add some, so you can start creating content.
           </p>
           <FaceSmileIcon className='w-8 h-8' />
         </div>
-      ) : (
-        <p className={`${caveat.className} text-start underline text-2xl`}>Fields:</p>
       )}
+      <CreateFieldForm />
 
       {fields.map((field) => (
         <React.Fragment key={field.name}>
@@ -96,7 +93,6 @@ export default function FieldList({ fields }: Props) {
             className={`space-y-3 w-full bg-slate-50 shadow-md overflow-hidden transition-all ease-in-out duration-1000 ${editingItemId === field.id && actionType === 'edit' ? 'max-h-30rem' : 'max-h-0'}`}
           >
             <div className={`flex-1 bg-slate-50 p-4`}>
-              <h1 className={`mb-3 text-xl`}>Edit field</h1>
               <div className='w-full'>
                 <Input label='Name' placeholder='Field name' />
               </div>
@@ -126,9 +122,6 @@ export default function FieldList({ fields }: Props) {
           </div>
         </React.Fragment>
       ))}
-
-      {createFormOpen && <CreateFieldForm setFormOpen={setCreateFormOpen} />}
-      {!createFormOpen && <Button label='Add a new field' onClick={() => setCreateFormOpen(true)} />}
     </>
   )
 }

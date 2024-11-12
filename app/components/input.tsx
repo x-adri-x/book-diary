@@ -8,7 +8,7 @@ type Props = {
 export default function Input({ label, placeholder, type = 'text', children }: Props) {
   return (
     <div>
-      <label className='mb-1 mt-5 block text-xs font-medium text-gray-900 text-left' htmlFor={label.toLowerCase()}>
+      <label className='mb-1 mt-2 block text-xs font-semibold text-gray-900 text-left' htmlFor={label.toLowerCase()}>
         {label}
       </label>
       <div className='relative'>

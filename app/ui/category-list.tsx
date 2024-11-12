@@ -2,13 +2,10 @@
 
 import { z } from 'zod'
 import { selectCategorySchema } from '@/database/schema/category'
-import { useState } from 'react'
 import CreateCategoryForm from './create-category-form'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { addDash } from '@/app/utility/utility'
-import { caveat } from '@/app/fonts/fonts'
-import Button from '@/app/components/button'
 
 type Category = z.infer<typeof selectCategorySchema>
 type Props = {
@@ -16,12 +13,11 @@ type Props = {
 }
 
 export default function CategoryList({ categories }: Props) {
-  const [formOpen, setFormOpen] = useState(false)
   const path = usePathname()
 
   return (
     <>
-      <p className={`${caveat.className} text-start underline text-2xl`}>Categories:</p>
+      <CreateCategoryForm />
       {categories.map((category) => (
         <Link
           key={category.id}
@@ -34,9 +30,6 @@ export default function CategoryList({ categories }: Props) {
           {category.name}
         </Link>
       ))}
-
-      {formOpen && <CreateCategoryForm setFormOpen={setFormOpen} />}
-      {!formOpen && <Button label='Add a new category' onClick={() => setFormOpen(true)} />}
     </>
   )
 }

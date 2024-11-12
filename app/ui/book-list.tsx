@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { z } from 'zod'
@@ -8,24 +7,22 @@ import { selectBookSchema } from '@/database/schema/book'
 import CreateBookForm from './create-book-form'
 import EmptyList from '@/app/components/empty-list'
 import { addDash } from '@/app/utility/utility'
-import Button from '../components/button'
 
+//TODO: add separate file/folder for UI schemas, and type declarations
 type Book = z.infer<typeof selectBookSchema>
 type Props = {
   books: Book[]
 }
 export default function BookList({ books }: Props) {
-  const [formOpen, setFormOpen] = useState(false)
   const path = usePathname()
 
   return (
     <>
-      {formOpen && <CreateBookForm />}
-      {!formOpen && <Button label='Start a new book' onClick={() => setFormOpen(true)} />}
+      <CreateBookForm />
       {books.length === 0 ? (
         <EmptyList name='book' />
       ) : (
-        <ul className='flex flex-col w-full '>
+        <ul className='flex flex-col w-full overflow-y-hidden'>
           {books.map((book) => (
             <li
               key={book.id}

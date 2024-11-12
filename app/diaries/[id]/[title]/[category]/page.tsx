@@ -8,6 +8,7 @@ import Search from '@/app/ui/search'
 import Breadcrumb from '@/app/components/breadcrumb'
 import { z } from 'zod'
 import ErrorMessage from '@/app/components/error-message'
+import CreateItemForm from '@/app/ui/create-item-form'
 
 type Item = z.infer<typeof selectItemSchema>
 type Props = {
@@ -16,8 +17,8 @@ type Props = {
 }
 
 export default async function Category(props: Props) {
-  const searchParams = await props.searchParams;
-  const params = await props.params;
+  const searchParams = await props.searchParams
+  const params = await props.params
   const { id, title } = params
   const { category, query } = searchParams
   let items: Array<Item> | null = null
@@ -45,6 +46,7 @@ export default async function Category(props: Props) {
         <CategorySettings />
       </div>
       <Breadcrumb routes={[{ path: `/diaries/${id}/${title}`, label: 'Categories' }]} />
+      <CreateItemForm />
       <Search placeholder='Search items in this category' disabled={disabled} />
       {items && <ItemsList items={items} />}
       {errorMessage && <ErrorMessage errorMessage={errorMessage} />}

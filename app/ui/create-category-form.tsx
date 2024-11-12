@@ -1,27 +1,30 @@
 'use client'
 
-import { Dispatch, SetStateAction } from 'react'
+import { useState } from 'react'
 import { createCategory } from '../lib/actions'
 import ErrorMessage from '../components/error-message'
 import Input from '../components/input'
 import Form from '../components/form'
 import FormButton from '../components/form-button'
 import useAction from '../hooks/useAction'
+import Button from '../components/button'
 
-type Props = {
-  setFormOpen: Dispatch<SetStateAction<boolean>>
-}
-
-export default function CreateCategoryForm({ setFormOpen }: Props) {
+export default function CreateCategoryForm() {
   const { loading, errorMessage, handleSubmit, formRef } = useAction(createCategory, () => setFormOpen(false))
+  const [formOpen, setFormOpen] = useState(false)
 
   return (
-    <Form onSubmit={handleSubmit} ref={formRef} heading='Create a new category.'>
-      <div className='w-full'>
-        <Input label='Name' placeholder='Name of the category' />
-      </div>
-      <ErrorMessage errorMessage={errorMessage} />
-      <FormButton loading={loading} label='Add a new category' />
-    </Form>
+    <>
+      {formOpen && (
+        <Form onSubmit={handleSubmit} ref={formRef} onClose={() => setFormOpen(false)}>
+          <div className='w-full'>
+            <Input label='Name' placeholder='Name of the category' />
+          </div>
+          <ErrorMessage errorMessage={errorMessage} />
+          <FormButton loading={loading} label='Add a new category' />
+        </Form>
+      )}
+      {!formOpen && <Button label='Add a new category' onClick={() => setFormOpen(true)} />}
+    </>
   )
 }

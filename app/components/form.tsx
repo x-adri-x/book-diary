@@ -1,18 +1,17 @@
-import { FormEventHandler, ForwardedRef, forwardRef } from 'react'
+import { FormEventHandler, ForwardedRef, forwardRef, MouseEventHandler } from 'react'
+import { XCircleIcon } from '@heroicons/react/24/outline'
 
 type Props = {
   children: React.ReactNode
   onSubmit: FormEventHandler<HTMLFormElement>
-  heading: string
+  onClose: MouseEventHandler
 }
 
-const Form = forwardRef(function Form({ children, onSubmit, heading }: Props, ref: ForwardedRef<HTMLFormElement>) {
+const Form = forwardRef(function Form({ children, onSubmit, onClose }: Props, ref: ForwardedRef<HTMLFormElement>) {
   return (
     <form onSubmit={onSubmit} ref={ref} className='space-y-3 mt-10 w-full lg:max-w-xl'>
-      <div className='flex-1'>
-        <h1 className={`mb-3 text-xl text-center`}>{heading}</h1>
-        {children}
-      </div>
+      <XCircleIcon className='w-7 h-7 justify-self-end' onClick={onClose} />
+      <div className='flex-1'>{children}</div>
     </form>
   )
 })

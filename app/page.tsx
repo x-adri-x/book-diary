@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { caveat } from '@/app/fonts/fonts'
 
 export default function Page() {
+  //TODO: check whether the user is authenticated and redirect to home page if authenticated
+  //TODO: add fallback UI for Suspense
   return (
     <>
       <h1 className={`${caveat.className} text-5xl text-center mt-4`}>Book Diary</h1>
