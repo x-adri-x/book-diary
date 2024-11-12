@@ -222,7 +222,7 @@ export async function signup(formData: FormData) {
 
   try {
     const parsed = SignupSchema.parse(data)
-    if (parsed.password !== parsed.confirmPassword) {
+    if (parsed.password !== parsed['confirm-password']) {
       return { error: 'The passwords entered do not match. Please try again.' }
     }
     const existingUser = await db.select().from(user).where(eq(user.email, parsed.email))

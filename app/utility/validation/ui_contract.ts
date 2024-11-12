@@ -23,5 +23,5 @@ export const CreateFieldSchema = z.object({
 export const SignupSchema = z.object({
   email: z.string({ invalid_type_error, required_error }).email(),
   password: z.string({ invalid_type_error, required_error }).min(5, 'Password has to be at least 5 characters long.'),
-  confirmPassword: z.string({ invalid_type_error, required_error }),
+  'confirm-password': z.string({ invalid_type_error, required_error }),
 })
