@@ -3,7 +3,7 @@ import { signOut } from '@/auth'
 
 export default function Header() {
   return (
-    <div className='sticky top-0 left-0 right-0 py-4 bg-white'>
+    <div className='sticky top-0 left-0 right-0 py-4 bg-white z-10'>
       <form
         action={async () => {
           'use server'
