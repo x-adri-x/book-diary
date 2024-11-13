@@ -51,7 +51,11 @@ Create a Neon Project:
 postgres://username:password@hostname:port/dbname
 ```
 
-Create a .env file in the project root and add the following environment variables:
+Create a .env file in the project root and add the following environment variables. Note: you can generate a secret key with using this command:
+
+```
+openssl rand -base64 32
+```
 
 ```bash
 # Database connection

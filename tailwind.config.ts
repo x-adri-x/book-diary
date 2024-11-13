@@ -19,6 +19,7 @@ const config: Config = {
       },
       height: {
         '100dvh': '100dvh',
+        '90dvh': '90dvh',
         '50dvh': '50dvh',
       },
       minHeight: {

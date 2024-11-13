@@ -9,6 +9,8 @@ describe('Breadcrumb Component', () => {
 
     const homeLink = screen.getByText(/home/i)
     expect(homeLink).toBeInTheDocument()
+    //TODO
+    //const link = screen.getByRole('link')
     expect(homeLink.closest('a')).toHaveAttribute('href', '/diaries')
   })
 
