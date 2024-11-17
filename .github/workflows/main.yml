@@ -16,7 +16,8 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm config set legacy-peer-deps true
+          npm ci
 
       - name: Lint client
         run: npm run lint
