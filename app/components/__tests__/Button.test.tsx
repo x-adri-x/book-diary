@@ -1,6 +1,7 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import Button from '@/app/components/button'
+import userEvent from '@testing-library/user-event'
 
 describe('Button Component', () => {
   const mockOnClick = jest.fn()
@@ -16,11 +17,12 @@ describe('Button Component', () => {
     expect(buttonElement).toBeInTheDocument()
   })
 
-  it('calls onClick handler when clicked', () => {
+  it('calls onClick handler when clicked', async () => {
     render(<Button label='Submit' onClick={mockOnClick} />)
 
+    const user = userEvent.setup()
     const buttonElement = screen.getByRole('button', { name: 'Submit' })
-    fireEvent.click(buttonElement)
+    await user.click(buttonElement)
     expect(mockOnClick).toHaveBeenCalledTimes(1)
   })
 

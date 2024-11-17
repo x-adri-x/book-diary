@@ -1,7 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import Field from '@/app/ui/field'
 import { editContent } from '@/app/lib/actions'
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
+import userEvent from '@testing-library/user-event'
 
 // Mock the editContent function
 jest.mock('../../lib/actions', () => ({
@@ -40,7 +41,7 @@ describe('Field Component', () => {
     jest.clearAllMocks()
   })
 
-  it('renders without crashing', () => {
+  it('renders the component', () => {
     render(<Field field={mockField} contents={mockContents} />)
     expect(screen.getByText('Test Field')).toBeInTheDocument()
   })
@@ -50,19 +51,23 @@ describe('Field Component', () => {
     expect(screen.getByText('Initial content')).toBeInTheDocument()
   })
 
-  it('clicking on the field item opens and closes accordion', () => {
+  it('clicking on the field item opens and closes accordion', async () => {
     render(<Field field={mockField} contents={mockContents} />)
     const field = screen.getByText('Test Field')
-    fireEvent.click(field)
+    const user = userEvent.setup()
+
+    await user.click(field)
     expect(screen.getByText('Initial content')).toBeVisible()
 
-    fireEvent.click(field)
-    expect(screen.queryByText('Initial content')).not.toBeVisible()
+    await user.click(field)
+    expect(screen.getByText('Initial content')).not.toBeVisible()
   })
 
-  it('allows editing content', () => {
+  it('shows textbox for editing content', async () => {
     render(<Field field={mockField} contents={mockContents} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    const user = userEvent.setup()
+
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
 
     expect(screen.getByRole('textbox')).toBeInTheDocument()
   })
@@ -75,12 +80,14 @@ describe('Field Component', () => {
     ;(editContent as jest.Mock).mockResolvedValue({ success: true })
 
     render(<Field field={mockField} contents={mockContents} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
     const textarea = screen.getByRole('textbox')
 
     // Edit content
-    fireEvent.change(textarea, { target: { value: 'Updated content' } })
-    fireEvent.click(screen.getByText('Save'))
+    await user.clear(textarea)
+    await user.type(textarea, 'Updated content')
+    await user.click(screen.getByText('Save'))
 
     await waitFor(() => {
       expect(editContent).toHaveBeenCalledWith(
@@ -99,25 +106,28 @@ describe('Field Component', () => {
     ;(editContent as jest.Mock).mockResolvedValue({ error: 'Error updating content' })
 
     render(<Field field={mockField} contents={mockContents} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
 
     // Edit content
     const textarea = screen.getByRole('textbox')
-    fireEvent.change(textarea, { target: { value: 'Updated content' } })
-    fireEvent.click(screen.getByText('Save'))
+    await user.clear(textarea)
+    await user.type(textarea, 'Updated content')
+    await user.click(screen.getByText('Save'))
     await waitFor(() => {
       expect(screen.getByText('Error updating content')).toBeInTheDocument()
     })
   })
 
-  it('cancels editing and restores original content', () => {
+  it('cancels editing and restores original content', async () => {
     render(<Field field={mockField} contents={mockContents} />)
-    fireEvent.click(screen.getByText('Edit'))
+    const user = userEvent.setup()
+    await user.click(screen.getByText('Edit'))
 
     // Edit content
     const textarea = screen.getByRole('textbox')
-    fireEvent.change(textarea, { target: { value: 'Updated content' } })
-    fireEvent.click(screen.getByText('Cancel'))
+    await user.type(textarea, 'Updated content')
+    await user.click(screen.getByText('Cancel'))
 
     expect(screen.getByText('Initial content')).toBeInTheDocument()
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument() // Textarea should not be visible

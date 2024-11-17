@@ -1,27 +1,24 @@
-// FormWithButton.test.tsx
-
 import React from 'react'
-//TODO: use userEvent instead of fireEvent
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import Form from '@/app/components/form'
 import FormButton from '@/app/components/form-button'
+import userEvent from '@testing-library/user-event'
 
 describe('Form Component', () => {
-  it('renders the form heading and children correctly', () => {
+  it('renders the children correctly', () => {
     render(
-      <Form onSubmit={() => {}} heading='Test'>
+      <Form onSubmit={() => {}} onClose={() => {}}>
         <p>Children</p>
       </Form>
     )
 
-    expect(screen.getByText('Test')).toBeInTheDocument()
     expect(screen.getByText('Children')).toBeInTheDocument()
   })
 
   it('forwards the ref to the form element', () => {
     const formRef = React.createRef<HTMLFormElement>()
     render(
-      <Form onSubmit={() => {}} heading='Ref Test' ref={formRef}>
+      <Form onSubmit={() => {}} onClose={() => {}} ref={formRef}>
         <p>Form Content</p>
       </Form>
     )
@@ -33,15 +30,16 @@ describe('Form Component', () => {
 
 describe('Form component with FormButton Component', () => {
   it('calls onSubmit when button within form is clicked', async () => {
+    const user = userEvent.setup()
     const handleSubmit = jest.fn((e) => e.preventDefault())
     render(
-      <Form onSubmit={handleSubmit} heading='Form with Button Test'>
+      <Form onSubmit={handleSubmit} onClose={() => {}}>
         <FormButton label='Submit' loading={false} />
       </Form>
     )
 
     const buttonElement = screen.getByText('Submit')
-    fireEvent.click(buttonElement)
+    user.click(buttonElement)
 
     // Wait for the form submission to be registered
     await waitFor(() => {
@@ -52,7 +50,7 @@ describe('Form component with FormButton Component', () => {
   it('displays loading state on button click if loading is true', async () => {
     const handleSubmit = jest.fn((e) => e.preventDefault())
     render(
-      <Form onSubmit={handleSubmit} heading='Form with Loading Button'>
+      <Form onSubmit={handleSubmit} onClose={() => {}}>
         <FormButton label='Submit' loading={true} />
       </Form>
     )
