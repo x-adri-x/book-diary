@@ -1,0 +1,27 @@
+name: Test and Build
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.17.0'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint client
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test
+        env:
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
