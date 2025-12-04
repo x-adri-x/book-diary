@@ -35,6 +35,15 @@ const config: Config = {
         '0': '0',
         '30rem': '30rem', // Adjust this value as needed for the form content
       },
+      animation: {
+        dog: 'slideIn 0.5s ease',
+      },
+      keyframes: {
+        slideIn: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+      },
     },
   },
   plugins: [

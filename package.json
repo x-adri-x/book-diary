@@ -16,15 +16,19 @@
   "dependencies": {
     "@heroicons/react": "^2.1.5",
     "@neondatabase/serverless": "^0.10.1",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.35.2",
     "drizzle-zod": "^0.5.1",
-    "next": "15.0.2",
+    "motion": "^12.4.3",
+    "next": "^15.1.9",
     "next-auth": "^5.0.0-beta.25",
     "pg": "^8.13.0",
-    "react": "19.0.0-rc-02c0e824-20241028",
-    "react-dom": "19.0.0-rc-02c0e824-20241028",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -38,8 +42,6 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^20",
     "@types/pg": "^8.11.10",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "drizzle-kit": "^0.26.2",
     "eslint": "^8.57.0",
     "eslint-config-next": "15.0.2",
@@ -58,9 +60,5 @@
     "tsx": "^4.19.1",
     "typescript": "^5",
     "typescript-eslint": "^8.12.2"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   }
 }
